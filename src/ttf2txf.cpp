@@ -25,6 +25,8 @@
 #include <string>
 #include <vector>
 
+#include "utils.h"
+
 using namespace std;
 
 vector<wchar_t> charCodes;
@@ -337,7 +339,7 @@ int buildTXF(TexFontWriter& fontw,
         error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
         if( ! error )
         {
-            int nextX = x + FT_PIXELS(glyph->metrics.horiAdvance) + gap;
+            unsigned int nextX = x + FT_PIXELS(glyph->metrics.horiAdvance) + gap;
 
             if( nextX > img->width )
             {
@@ -345,7 +347,7 @@ int buildTXF(TexFontWriter& fontw,
                 y += step_y;
 
                 //if( (y + step_y) >= img->rows )
-                if( y >= img->rows )
+                if( (unsigned int) y >= img->rows )
                 {
                     fprintf( stderr, "Texture too small for %dpt %s\n",
 			     psize, file);
@@ -545,14 +547,14 @@ void reshape( int w, int h )
 #endif
 
 
-char _version[] = "1.0";
+char _version[] = TTF2TXF_VERSION;
 char _default_codes[] = " ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqrstuvwxyz?.;,!*:\"/+-|'@#$%^&<>()[]{}_";
 
 
 void usage()
-{
-    printf( "ttf2tex version %s (%s)\n\n", _version, __DATE__ );
-    printf( "Usage: ttf2tex [options] <TrueType Font>\n\n" );
+{	
+    printf( "ttf2txf version %s (%s)\n\n", _version, __DATE__ );
+    printf( "Usage: %s [options] <TrueType Font>\n\n", program_name_get() );
     printf( "Options:\n" );
     printf( "  -w <width>      Texture width  (default 256)\n" );
     printf( "  -h <height>     Texture height (default 256)\n" );
@@ -598,10 +600,12 @@ int main( int argc, char** argv )
     char outfile[FILENAME_MAX];
     string codesfile;
     char* codes = _default_codes;
-
+	
     if( argc < 2 )
     {
+		program_name_initialize( argv[0] );
         usage();
+		program_name_finalize();
         return 0;
     }
 
