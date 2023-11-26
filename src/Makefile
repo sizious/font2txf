@@ -2,7 +2,7 @@
 # Makefile for the ttf2txf program.
 
 TARGET 		= ttf2txf
-VERSION 	= 1.0.1
+VERSION 	= 1.11.2
 
 CXX 		= g++
 STRIP 		= strip
