@@ -552,7 +552,7 @@ char _default_codes[] = " ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqr
 void usage()
 {
     printf( "ttf2tex version %s (%s)\n\n", _version, __DATE__ );
-    printf( "Useage: ttf2tex [options] <TrueType Font>\n\n" );
+    printf( "Usage: ttf2tex [options] <TrueType Font>\n\n" );
     printf( "Options:\n" );
     printf( "  -w <width>      Texture width  (default 256)\n" );
     printf( "  -h <height>     Texture height (default 256)\n" );
