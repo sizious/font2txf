@@ -122,7 +122,11 @@ void TexFontWriter::write( const char* filename )
     fwrite( &max_ascent,  sizeof(int), 1, fp );
     fwrite( &max_descent, sizeof(int), 1, fp );
     fwrite( &num_glyphs,  sizeof(int), 1, fp );
-    printf("num_glyphs = %d\n", num_glyphs);
+    
+    if (_verbose) 
+    {
+        printf("num_glyphs = %d\n", num_glyphs);
+    }
 
     for( int i = 0; i < num_glyphs; ++i )
     {
@@ -254,12 +258,12 @@ static FT_Error renderGlyph( FT_Bitmap* img, FT_GlyphSlot glyph,
 */
 
 int buildTXF(TexFontWriter& fontw,
-	     const char* file,
-	     const vector<wchar_t>& codes,
-	     FT_Bitmap* img,
-	     int psize,
-	     int gap,
-	     bool asBitmap)
+         const char* file,
+         const vector<wchar_t>& codes,
+         FT_Bitmap* img,
+         int psize,
+         int gap,
+         bool asBitmap)
 {
     FT_Library library;
     FT_Face face;
@@ -329,7 +333,7 @@ int buildTXF(TexFontWriter& fontw,
     for (unsigned int i = 0; i < codes.size(); i++)
     {
         //int glyph_index = FT_Get_Char_Index( face, *ci );
-	int glyph_index = FT_Get_Char_Index(face, codes[i]);
+    int glyph_index = FT_Get_Char_Index(face, codes[i]);
         if( glyph_index == 0 )
         {
             printf( "Code 0x%x is undefined\n", (int) codes[i]);
@@ -350,7 +354,7 @@ int buildTXF(TexFontWriter& fontw,
                 if( (unsigned int) y >= img->rows )
                 {
                     fprintf( stderr, "Texture too small for %dpt %s\n",
-			     psize, file);
+                 psize, file);
                     break;
                 }
 
@@ -371,7 +375,7 @@ int buildTXF(TexFontWriter& fontw,
             tgi.x       = x + tgi.xoffset;
             tgi.y       = fontw.tex_height - y + tgi.yoffset;
 
-	    //printf("code: %04x  size=%dx%d\n", tgi.c, tgi.width, tgi.height);
+        //printf("code: %04x  size=%dx%d\n", tgi.c, tgi.width, tgi.height);
             x = nextX;
         }
         else
@@ -552,7 +556,7 @@ char _default_codes[] = " ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqr
 
 
 void usage()
-{	
+{    
     printf( "ttf2txf version %s (%s)\n\n", _version, __DATE__ );
     printf( "Usage: %s [options] <TrueType Font>\n\n", program_name_get() );
     printf( "Options:\n" );
@@ -573,14 +577,14 @@ bool loadCharCodesFile(const string& filename)
     FILE* fp;
     fp = fopen(filename.c_str(), "r");
     if (fp == NULL)
-	return false;
+    return false;
 
     for (;;)
     {
-	unsigned int i;
-	if (fscanf(fp, " %x", &i) != 1)
-	    break;
-	charCodes.insert(charCodes.end(), i);
+    unsigned int i;
+    if (fscanf(fp, " %x", &i) != 1)
+        break;
+    charCodes.insert(charCodes.end(), i);
     }
 
     fclose(fp);
@@ -600,12 +604,12 @@ int main( int argc, char** argv )
     char outfile[FILENAME_MAX];
     string codesfile;
     char* codes = _default_codes;
-	
+    
     if( argc < 2 )
     {
-		program_name_initialize( argv[0] );
+        program_name_initialize( argv[0] );
         usage();
-		program_name_finalize();
+        program_name_finalize();
         return 0;
     }
 
@@ -638,7 +642,7 @@ int main( int argc, char** argv )
                 i++;
                 if( i >= argc ) break;
                 codes = argv[i];
-		printf("codes: %s\n", codes);
+        printf("codes: %s\n", codes);
             }
             else if( *cp == 'b' )
             {
@@ -666,13 +670,13 @@ int main( int argc, char** argv )
             {
                 _verbose = false;
             }
-	    else if (*cp == 'f')
-	    {
-		i++;
-		if (i >= argc)
-		    break;
-		codesfile = argv[i];
-	    }
+        else if (*cp == 'f')
+        {
+        i++;
+        if (i >= argc)
+            break;
+        codesfile = argv[i];
+        }
         }
         else
         {
@@ -720,16 +724,16 @@ int main( int argc, char** argv )
     // Populate the list of character codes
     if (!codesfile.empty())
     {
-	loadCharCodesFile(codesfile);
+    loadCharCodesFile(codesfile);
     }
     else
     {
-	int i = 0;
-	while (codes[i] != '\0')
+    int i = 0;
+    while (codes[i] != '\0')
         {
-	    charCodes.insert(charCodes.end(), (wchar_t) codes[i]);
-	    i++;
-	}
+        charCodes.insert(charCodes.end(), (wchar_t) codes[i]);
+        i++;
+    }
     }
 
     fontw.num_glyphs = buildTXF( fontw, infile, charCodes, &_txf, size, gap,
