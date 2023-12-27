@@ -2,7 +2,7 @@
 #define __BUILDTXF_H__
 
 #include "global.h"
-#include "fntwrite.h"
+#include "txfwrite.h"
 
 /**
   Returns number of glyphs added or zero if fails.

@@ -1,4 +1,4 @@
-#include "fntwrite.h"
+#include "txfwrite.h"
 
 
 TexFontWriter::~TexFontWriter()

@@ -1,5 +1,5 @@
-#ifndef __FNTWRITE_H__
-#define __FNTWRITE_H__
+#ifndef __txfwrite_H__
+#define __txfwrite_H__
 
 #include <assert.h>
 #include <stdio.h>
@@ -57,4 +57,4 @@ struct TexFontWriter
 };
 
 
-#endif /* __FNTWRITE_H__ */
+#endif /* __txfwrite_H__ */

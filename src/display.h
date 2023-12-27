@@ -14,7 +14,7 @@
 #include <GL/glut.h>
 
 #include "utils.h"
-#include "buildtxf.h"
+#include "txfbuild.h"
 #include "charset.h"
 
 void do_preview_txf( int argc, char* argv[] );

@@ -25,7 +25,7 @@
 #include <vector>
 
 #include "utils.h"
-#include "buildtxf.h"
+#include "txfbuild.h"
 #include "charset.h"
 #include "display.h"
 

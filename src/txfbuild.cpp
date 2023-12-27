@@ -11,7 +11,7 @@
 //#include "global.h"
 #include "utils.h"
 
-#include "buildtxf.h"
+#include "txfbuild.h"
 
 
 #define FT_PIXELS(x)  (x >> 6)

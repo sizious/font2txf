@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "utils.h"
-#include "buildtxf.h"
+#include "txfbuild.h"
 
 bool loadCharCodesFile(const std::string& filename)
 {
