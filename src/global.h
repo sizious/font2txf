@@ -8,7 +8,7 @@
 
 #define TTF2TXF_PROGNAME "ttf2txf"
 
-extern std::vector<wchar_t> g_charCodes;
+extern std::vector<wchar_t> g_char_codes;
 
 extern bool g_verbose;
 

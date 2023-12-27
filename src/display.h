@@ -17,6 +17,6 @@
 #include "buildtxf.h"
 #include "charset.h"
 
-void display_start( int argc, char* argv[] );
+void do_preview_txf( int argc, char* argv[] );
 		 
 #endif /* __DISPLAY_H__ */

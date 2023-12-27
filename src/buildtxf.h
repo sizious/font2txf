@@ -8,7 +8,7 @@
   Returns number of glyphs added or zero if fails.
 */
 
-int buildTXF(TexFontWriter& fontw,
+int build_txf(TexFontWriter& fontw,
          const char* file,
          const std::vector<wchar_t>& codes,
          FT_Bitmap* img,
@@ -16,4 +16,6 @@ int buildTXF(TexFontWriter& fontw,
          int gap,
          bool asBitmap);
 		 
+void txf_dump_image( unsigned char* buf, int pitch, int w, int h, bool fit = false );
+	 
 #endif /* __BUILDTXF_H__ */

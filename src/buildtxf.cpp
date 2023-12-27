@@ -17,13 +17,14 @@
 #define FT_PIXELS(x)  (x >> 6)
 
 
-void printImg( unsigned char* buf, int pitch, int w, int h )
+void txf_dump_image( unsigned char* buf, int pitch, int w, int h, bool fit )
 {
     int x, y;
     
-    printf( "%d %d %d\n", pitch, w, h );
+    printf( "print_img:  pitch=%d  w=%d h=%d  fit=%s\n", pitch, w, h, bool_to_str( fit ) );
+	
     /* Fit on 80 column terminal. */
-    if( w > 39 )
+    if( fit && w > 39 )
         w = 39;
 
     for( y = 0; y < h; y++ )
@@ -37,7 +38,7 @@ void printImg( unsigned char* buf, int pitch, int w, int h )
 }
 
 
-void dumpCharMaps( FT_Face face )
+void dump_char_maps( FT_Face face )
 {
     FT_CharMap charmap;
     int n;
@@ -58,7 +59,7 @@ void dumpCharMaps( FT_Face face )
 }
 
 
-void blitGlyphToBitmap( FT_Bitmap* src, FT_Bitmap* dst, int x, int y )
+void blit_glyph_to_bitmap( FT_Bitmap* src, FT_Bitmap* dst, int x, int y )
 {
     unsigned char* s;
     unsigned char* d;
@@ -80,8 +81,8 @@ void blitGlyphToBitmap( FT_Bitmap* src, FT_Bitmap* dst, int x, int y )
 }
 
 
-static FT_Error renderGlyph( FT_Bitmap* img, FT_GlyphSlot glyph,
-                             int x_offset, int y_offset, bool antialias )
+static FT_Error render_glyph( FT_Bitmap* img, FT_GlyphSlot glyph,
+                              int x_offset, int y_offset, bool antialias )
 {
     /* first, render the glyph into an intermediate buffer */
     if( glyph->format != ft_glyph_format_bitmap )
@@ -92,7 +93,7 @@ static FT_Error renderGlyph( FT_Bitmap* img, FT_GlyphSlot glyph,
             return error;
     }
  
-#if 0
+#ifdef DEBUG
     printf( "KR offset %dx%d\n", x_offset, y_offset );
     printf( "KR left/top %d %d\n", glyph->bitmap_left, glyph->bitmap_top );
     printf( "KR metrics %ldx%ld %ldx%ld\n", 
@@ -101,11 +102,11 @@ static FT_Error renderGlyph( FT_Bitmap* img, FT_GlyphSlot glyph,
             FT_PIXELS(glyph->metrics.horiBearingX),
             FT_PIXELS(glyph->metrics.horiBearingY) );
 #endif
- 
+
     /* Then, blit the image to the target surface */
-    blitGlyphToBitmap( &glyph->bitmap, img,
-                       x_offset + glyph->bitmap_left,
-                       y_offset - glyph->bitmap_top );
+    blit_glyph_to_bitmap( &glyph->bitmap, img,
+                          x_offset + glyph->bitmap_left,
+                          y_offset - glyph->bitmap_top );
 
     return 0;
 }
@@ -115,13 +116,13 @@ static FT_Error renderGlyph( FT_Bitmap* img, FT_GlyphSlot glyph,
   Returns number of glyphs added or zero if fails.
 */
 
-int buildTXF(TexFontWriter& fontw,
-         const char* file,
-         const std::vector<wchar_t>& codes,
-         FT_Bitmap* img,
-         int psize,
-         int gap,
-         bool asBitmap)
+int build_txf( TexFontWriter& fontw,
+               const char* file,
+               const std::vector<wchar_t>& codes,
+               FT_Bitmap* img,
+               int psize,
+               int gap,
+               bool asBitmap )
 {
     FT_Library library;
     FT_Face face;
@@ -141,6 +142,7 @@ int buildTXF(TexFontWriter& fontw,
         return 0;
     }
 
+
     error = FT_New_Face( library, file, 0, &face );
     if( error )
     {
@@ -154,7 +156,7 @@ int buildTXF(TexFontWriter& fontw,
         printf( "  family_name: \"%s\"\n", face->family_name );
         printf( "  style_name:  \"%s\"\n",  face->style_name );
         printf( "  num_glyphs:  %ld\n", face->num_glyphs );
-        dumpCharMaps( face );
+        dump_char_maps( face );
         printf( "]\n" );
     }
 
@@ -174,8 +176,8 @@ int buildTXF(TexFontWriter& fontw,
     //fontw.max_ascent  = size->metrics.y_ppem;
     // fontw.max_ascent  = FT_PIXELS(face->ascender);
     // fontw.max_descent = -FT_PIXELS(face->descender);
-    fontw.max_ascent  = FT_PIXELS((int) (face->ascender * (float) psize / 30.0f));
-    fontw.max_descent = -FT_PIXELS((int) (face->descender * (float) psize / 30.0f));
+    fontw.max_ascent  = FT_PIXELS( (int) (face->ascender * (float) psize / 30.0f) );
+    fontw.max_descent = -FT_PIXELS( (int) (face->descender * (float) psize / 30.0f) );
 
 
     /* Clear bitmap */
@@ -184,14 +186,15 @@ int buildTXF(TexFontWriter& fontw,
 
     step_y = size->metrics.y_ppem + gap;
 
+
     start_x = gap;
     x = start_x;
     y = step_y;
 
+
     for (unsigned int i = 0; i < codes.size(); i++)
     {
-        //int glyph_index = FT_Get_Char_Index( face, *ci );
-    int glyph_index = FT_Get_Char_Index(face, codes[i]);
+        int glyph_index = FT_Get_Char_Index(face, codes[i]);
         if( glyph_index == 0 )
         {
             printf( "Code 0x%x is undefined\n", (int) codes[i]);
@@ -208,18 +211,17 @@ int buildTXF(TexFontWriter& fontw,
                 x  = start_x;
                 y += step_y;
 
-                //if( (y + step_y) >= img->rows )
                 if( (unsigned int) y >= img->rows )
                 {
                     fprintf( stderr, "Texture too small for %dpt %s\n",
-                 psize, file);
+                             psize, file);
                     break;
                 }
 
                 nextX = x + FT_PIXELS(glyph->metrics.horiAdvance) + gap;
             }
 
-            renderGlyph( img, glyph, x, y, ! asBitmap );
+            render_glyph( img, glyph, x, y, ! asBitmap );
 
             TexGlyphInfo& tgi = fontw.tgi[ count ];
             count++;
@@ -233,7 +235,10 @@ int buildTXF(TexFontWriter& fontw,
             tgi.x       = x + tgi.xoffset;
             tgi.y       = fontw.tex_height - y + tgi.yoffset;
 
-        //printf("code: %04x  size=%dx%d\n", tgi.c, tgi.width, tgi.height);
+#ifdef DEBUG
+            printf("char: \"%c\"  code: %04x  size=%dx%d\n", tgi.c, tgi.c, tgi.width, tgi.height);
+#endif
+			
             x = nextX;
         }
         else

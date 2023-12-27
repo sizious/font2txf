@@ -29,7 +29,7 @@
 #include "charset.h"
 #include "display.h"
 
-std::vector<wchar_t> g_charCodes;
+std::vector<wchar_t> g_char_codes;
 
 bool g_verbose = true;
 
@@ -111,6 +111,7 @@ int main( int argc, char** argv )
             }
             else if( *cp == 'b' )
             {
+                printf( "as bitmap\n" );
                 asBitmap = true;
             }
             else if( *cp == 'g' )
@@ -199,13 +200,13 @@ int main( int argc, char** argv )
         int i = 0;
         while ( codes[i] != '\0' )
         {
-            g_charCodes.insert(g_charCodes.end(), (wchar_t) codes[i]);
+            g_char_codes.insert(g_char_codes.end(), (wchar_t) codes[i]);
             i++;
         }
     }
 
-    fontw.num_glyphs = buildTXF( fontw, infile, g_charCodes, &g_txf, size, gap,
-                                 asBitmap );
+    fontw.num_glyphs = build_txf( fontw, infile, g_char_codes, &g_txf, size, gap,
+                                  asBitmap );
     if( ! fontw.num_glyphs )
         return -1;
 
@@ -223,11 +224,12 @@ int main( int argc, char** argv )
 
     fontw.teximage = g_txf.buffer;
     fontw.write( outfile );
-    //printImg( g_txf.buffer, 256, 256, 100 );
+    
+    txf_dump_image( g_txf.buffer, 256, fontw.tex_width, fontw.tex_height );
 
 
 #ifdef DISPLAY
-    display_start( argc, argv );
+    do_preview_txf( argc, argv );
 #else
     free( g_txf.buffer );
 #endif

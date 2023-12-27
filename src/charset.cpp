@@ -23,7 +23,7 @@ bool loadCharCodesFile(const std::string& filename)
         unsigned int i;
         if (fscanf(fp, " %x", &i) != 1)
             break;
-        g_charCodes.insert(g_charCodes.end(), i);
+        g_char_codes.insert(g_char_codes.end(), i);
     }
 
     fclose(fp);

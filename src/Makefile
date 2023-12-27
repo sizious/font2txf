@@ -7,7 +7,7 @@ VERSION 	= 1.11.2
 CXX 		= g++
 STRIP 		= strip
 
-CCFLAGS		?= -pipe -Wall -W -g -DDISPLAY -DFREEGLUT_STATIC -Bstatic -static
+CCFLAGS		?= -pipe -Wall -W -g -DDEBUG -DDISPLAY -DFREEGLUT_STATIC -Bstatic -static
 
 INC_FLAGS 	:= -I/usr/local/include/freetype2 -I/usr/local/include
 CXXFLAGS 	:= $(CCFLAGS) -DTTF2TXF_VERSION=\"$(VERSION)\" $(INC_FLAGS)

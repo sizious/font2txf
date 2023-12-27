@@ -98,7 +98,7 @@ void build_font_texture( FT_Bitmap* img )
 }
 
 
-void display()
+void on_display()
 {
     glClear( GL_COLOR_BUFFER_BIT );
 
@@ -128,14 +128,14 @@ void display()
 }
 
 
-void keyFunc( unsigned char key, int, int )
+void on_keyFunc( unsigned char key, int, int )
 {
-    if( key == 'q' || key == 27 )
+    if( key == 'q' || key == 27 ) // ESC
         exit( 0 );
 }
 
 
-void reshape( int w, int h )
+void on_reshape( int w, int h )
 {
     glViewport(0, 0, w, h);
 
@@ -145,10 +145,14 @@ void reshape( int w, int h )
 
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
+
+    /*glTranslatef(0, h - g_txf.rows, 0);
+    glRasterPos2i(0, 0);
+    glBitmap(0, 0, 0, 0, 256, -256, NULL);*/
 }
 
 
-void display_start( int argc, char* argv[] )
+void do_preview_txf( int argc, char* argv[] )
 {
 	glutInit( &argc, argv );
     // GLUT_SINGLE does not seem to work with NVidia's OpenGL on GeForce2.
@@ -157,9 +161,9 @@ void display_start( int argc, char* argv[] )
 
     glutInitWindowSize( g_txf.width, g_txf.rows );
     glutCreateWindow( TTF2TXF_PROGNAME );
-    glutReshapeFunc( reshape );
-    glutDisplayFunc( display );
-    glutKeyboardFunc( keyFunc );
+    glutReshapeFunc( on_reshape );
+    glutDisplayFunc( on_display );
+    glutKeyboardFunc( on_keyFunc );
 
     glClearColor( 0.2, 0.2, 0.2, 1.0 );
 

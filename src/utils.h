@@ -11,8 +11,10 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
-void program_name_initialize(char *argv0);
-char * program_name_get();
+void program_name_initialize( char* argv0 );
+char* program_name_get();
 void program_name_finalize();
+
+const char* bool_to_str( bool b );
 
 #endif /* __UTILS_H__ */
