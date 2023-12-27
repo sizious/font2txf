@@ -1,10 +1,10 @@
 #ifdef DISPLAY
 
-#include <GL/glut.h>
-
+#include "display.h"
 
 // Uncomment to debug
 #undef GL_EXT_paletted_texture
+
 
 GLuint _tid;
 
@@ -146,5 +146,29 @@ void reshape( int w, int h )
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
 }
+
+
+void display_start( int argc, char* argv[] )
+{
+	glutInit( &argc, argv );
+    // GLUT_SINGLE does not seem to work with NVidia's OpenGL on GeForce2.
+    //glutInitDisplayMode( GLUT_RGB | GLUT_SINGLE );
+    glutInitDisplayMode( GLUT_RGBA | GLUT_DOUBLE );
+
+    glutInitWindowSize( g_txf.width, g_txf.rows );
+    glutCreateWindow( TTF2TXF_PROGNAME );
+    glutReshapeFunc( reshape );
+    glutDisplayFunc( display );
+    glutKeyboardFunc( keyFunc );
+
+    glClearColor( 0.2, 0.2, 0.2, 1.0 );
+
+    build_font_texture( &g_txf );
+
+    free( g_txf.buffer );
+
+    glutMainLoop();
+}
+
 
 #endif

@@ -1,6 +1,13 @@
 #ifndef __GLOBAL_H__
 #define __GLOBAL_H__
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
+#include <vector>
+
+#define TTF2TXF_PROGNAME "ttf2txf"
+
 extern std::vector<wchar_t> g_charCodes;
 
 extern bool g_verbose;

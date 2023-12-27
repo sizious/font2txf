@@ -27,6 +27,7 @@
 #include "utils.h"
 #include "buildtxf.h"
 #include "charset.h"
+#include "display.h"
 
 std::vector<wchar_t> g_charCodes;
 
@@ -38,8 +39,8 @@ char _default_codes[] = " ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqr
 
 
 void usage()
-{    
-    printf( "ttf2txf version %s (%s)\n\n", TTF2TXF_VERSION, __DATE__ );
+{
+    printf( "%s version %s (%s)\n\n", TTF2TXF_PROGNAME, TTF2TXF_VERSION, __DATE__ );
     printf( "Usage: %s [options] <TrueType Font>\n\n", program_name_get() );
     printf( "Options:\n" );
     printf( "  -w <width>          Texture width  (default 256)\n" );
@@ -226,24 +227,7 @@ int main( int argc, char** argv )
 
 
 #ifdef DISPLAY
-    glutInit( &argc, argv );
-    // GLUT_SINGLE does not seem to work with NVidia's OpenGL on GeForce2.
-    //glutInitDisplayMode( GLUT_RGB | GLUT_SINGLE );
-    glutInitDisplayMode( GLUT_RGBA | GLUT_DOUBLE );
-
-    glutInitWindowSize( g_txf.width, g_txf.rows );
-    glutCreateWindow( infile );
-    glutReshapeFunc( reshape );
-    glutDisplayFunc( display );
-    glutKeyboardFunc( keyFunc );
-
-    glClearColor( 0.2, 0.2, 0.2, 1.0 );
-
-    build_font_texture( &g_txf );
-
-    free( g_txf.buffer );
-
-    glutMainLoop();
+    display_start( argc, argv );
 #else
     free( g_txf.buffer );
 #endif
