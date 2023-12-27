@@ -34,24 +34,23 @@ bool g_verbose = true;
 
 FT_Bitmap g_txf;
 
-char _version[] = TTF2TXF_VERSION;
 char _default_codes[] = " ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqrstuvwxyz?.;,!*:\"/+-|'@#$%^&<>()[]{}_";
 
 
 void usage()
 {    
-    printf( "ttf2txf version %s (%s)\n\n", _version, __DATE__ );
+    printf( "ttf2txf version %s (%s)\n\n", TTF2TXF_VERSION, __DATE__ );
     printf( "Usage: %s [options] <TrueType Font>\n\n", program_name_get() );
     printf( "Options:\n" );
-    printf( "  -w <width>      Texture width  (default 256)\n" );
-    printf( "  -h <height>     Texture height (default 256)\n" );
-    //printf( "  -b              Create bitmap texture\n" );
-    printf( "  -f <filename>   File containing character codes to convert\n");
-    printf( "  -c <string>     Characters to convert\n" );
-    printf( "  -g <gap>        Space between glyphs (default 1)\n" );
-    printf( "  -s <size>       Font point size (default 20)\n" );
-    printf( "  -o <filename>   Output file for textured font\n" );
-    printf( "  -q              Quiet; no output\n" );
+    printf( "  -w <width>          Texture width  (default 256)\n" );
+    printf( "  -h <height>         Texture height (default 256)\n" );
+//    printf( "  -b                  Create bitmap texture\n" );
+    printf( "  -f <filename.txt>   File containing character codes to convert\n");
+    printf( "  -c <string>         Characters to convert\n" );
+    printf( "  -g <gap>            Space between glyphs (default 1)\n" );
+    printf( "  -s <size>           Font point size (default 20)\n" );
+    printf( "  -o <filename.txf>   Output file for textured font\n" );
+    printf( "  -q                  Quiet; no output\n" );
 }
 
 
@@ -90,21 +89,24 @@ int main( int argc, char** argv )
             if( *cp == 'w' )
             {
                 i++;
-                if( i >= argc ) break;
+                if( i >= argc )
+                    break;
                 fontw.tex_width = atoi(argv[i]);
             }
             else if( *cp == 'h' )
             {
                 i++;
-                if( i >= argc ) break;
+                if( i >= argc )
+                    break;
                 fontw.tex_height = atoi(argv[i]);
             }
             else if( *cp == 'c' )
             {
                 i++;
-                if( i >= argc ) break;
+                if( i >= argc )
+                    break;
                 codes = argv[i];
-        printf("codes: %s\n", codes);
+                printf("codes: %s\n", codes);
             }
             else if( *cp == 'b' )
             {
@@ -113,32 +115,35 @@ int main( int argc, char** argv )
             else if( *cp == 'g' )
             {
                 i++;
-                if( i >= argc ) break;
+                if( i >= argc )
+                    break;
                 gap = atoi(argv[i]);
             }
             else if( *cp == 's' )
             {
                 i++;
-                if( i >= argc ) break;
+                if( i >= argc )
+                    break;
                 size = atoi(argv[i]);
             }
             else if( *cp == 'o' )
             {
                 i++;
-                if( i >= argc ) break;
+                if( i >= argc )
+                    break;
                 strcpy( outfile, argv[i] );
             }
             else if( *cp == 'q' )
             {
                 g_verbose = false;
             }
-        else if (*cp == 'f')
-        {
-        i++;
-        if (i >= argc)
-            break;
-        codesfile = argv[i];
-        }
+            else if (*cp == 'f')
+            {
+                i++;
+                if (i >= argc)
+                    break;
+                codesfile = argv[i];
+            }
         }
         else
         {
@@ -184,18 +189,18 @@ int main( int argc, char** argv )
     g_txf.buffer = (unsigned char*) malloc( g_txf.pitch * g_txf.rows );
 
     // Populate the list of character codes
-    if (!codesfile.empty())
+    if ( !codesfile.empty() )
     {
-    loadCharCodesFile(codesfile);
+        loadCharCodesFile( codesfile );
     }
     else
     {
-    int i = 0;
-    while (codes[i] != '\0')
+        int i = 0;
+        while ( codes[i] != '\0' )
         {
-        g_charCodes.insert(g_charCodes.end(), (wchar_t) codes[i]);
-        i++;
-    }
+            g_charCodes.insert(g_charCodes.end(), (wchar_t) codes[i]);
+            i++;
+        }
     }
 
     fontw.num_glyphs = buildTXF( fontw, infile, g_charCodes, &g_txf, size, gap,
