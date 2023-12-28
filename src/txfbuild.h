@@ -15,7 +15,5 @@ int build_txf(TexFontWriter& fontw,
          int psize,
          int gap,
          bool asBitmap);
-		 
-void txf_dump_image( unsigned char* buf, int pitch, int w, int h, bool fit = false );
 	 
 #endif /* __BUILDTXF_H__ */

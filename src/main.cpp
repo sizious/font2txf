@@ -222,11 +222,12 @@ int main( int argc, char** argv )
         printf( "]\n" );
     }
 
-    fontw.teximage = g_txf.buffer;
+    fontw.tex_image = g_txf.buffer;
     fontw.write( outfile );
-    
-    txf_dump_image( g_txf.buffer, 256, fontw.tex_width, fontw.tex_height );
-
+  
+#ifdef DEBUG	
+    fontw.dump( 256 );
+#endif
 
 #ifdef DISPLAY
     do_preview_txf( argc, argv );

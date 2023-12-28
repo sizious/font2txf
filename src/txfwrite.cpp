@@ -58,16 +58,45 @@ void TexFontWriter::write( const char* filename )
     else
     {
 #if 1
-        unsigned char* row = teximage + (tex_width * (tex_height - 1));
+        unsigned char* row = tex_image + (tex_width * (tex_height - 1));
         for( int y = 0; y < tex_height; ++y )
         {
             fwrite( row, tex_width, 1, fp );
             row -= tex_width;
         }
 #else
-        fwrite( teximage, tex_width * tex_height, 1, fp );
+        fwrite( tex_image, tex_width * tex_height, 1, fp );
 #endif
     }
 
     fclose( fp );
 }
+
+
+#ifdef DEBUG
+
+void TexFontWriter::dump( int pitch, bool crop )
+{
+    int x, y, w, h;    
+	unsigned char* buf = tex_image;
+	
+	w = tex_width;
+	h = tex_height;
+
+	printf( "txf dump:  pitch=%d  w=%d h=%d crop=%s\n", pitch, w, h, bool_to_str( crop ) );
+
+    /* Fit on 80 column terminal. */
+    if( crop && w > 39 )
+        w = 39;
+
+    for( y = 0; y < h; y++ )
+    {
+        for( x = 0; x < w; x++ )
+            printf( "%02x", (int) *(buf + x) );
+        printf( "\n" );
+        buf += pitch;
+    }
+    printf( "\n" );
+}
+
+#endif

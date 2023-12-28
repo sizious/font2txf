@@ -39,6 +39,10 @@ struct TexFontWriter
     TexFontWriter() : tgi(0) {}
     ~TexFontWriter();
 
+#if DEBUG
+    void dump( int pitch, bool crop = false);
+#endif
+
     void setGlyphCount( int );
     void write( const char* filename );
 
@@ -52,7 +56,7 @@ struct TexFontWriter
     //int min_glyph;
     //int range;
 
-    unsigned char* teximage;
+    unsigned char* tex_image;
     TexGlyphInfo* tgi;
 };
 

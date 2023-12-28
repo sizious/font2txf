@@ -17,27 +17,6 @@
 #define FT_PIXELS(x)  (x >> 6)
 
 
-void txf_dump_image( unsigned char* buf, int pitch, int w, int h, bool fit )
-{
-    int x, y;
-    
-    printf( "print_img:  pitch=%d  w=%d h=%d  fit=%s\n", pitch, w, h, bool_to_str( fit ) );
-	
-    /* Fit on 80 column terminal. */
-    if( fit && w > 39 )
-        w = 39;
-
-    for( y = 0; y < h; y++ )
-    {
-        for( x = 0; x < w; x++ )
-            printf( "%02x", (int) *(buf + x) );
-        printf( "\n" );
-        buf += pitch;
-    }
-    printf( "\n" );
-}
-
-
 void dump_char_maps( FT_Face face )
 {
     FT_CharMap charmap;
