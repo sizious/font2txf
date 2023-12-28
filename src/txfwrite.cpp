@@ -78,12 +78,12 @@ void TexFontWriter::write( const char* filename )
 void TexFontWriter::dump_to_console( bool crop )
 {
     int x, y, w, h, pitch;    
-	unsigned char* buf = tex_image;
-	
-	pitch = w = tex_width;
-	h = tex_height;
+    unsigned char* buf = tex_image;
 
-	printf( "txf dump:  pitch=%d  w=%d h=%d crop=%s\n", pitch, w, h, bool_to_str( crop ) );
+    pitch = w = tex_width;
+    h = tex_height;
+
+    printf( "txf dump:  pitch=%d  w=%d h=%d crop=%s\n", pitch, w, h, bool_to_str( crop ) );
 
     /* Fit on 80 column terminal. */
     if( crop && w > 39 )

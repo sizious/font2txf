@@ -217,7 +217,7 @@ int build_txf( TexFontWriter& fontw,
 #ifdef DEBUG
             printf("char: \"%c\"  code: %04x  size=%dx%d\n", tgi.c, tgi.c, tgi.width, tgi.height);
 #endif
-			
+
             x = nextX;
         }
         else

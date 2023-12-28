@@ -131,9 +131,9 @@ void on_display()
 void on_keyFunc( unsigned char key, int, int )
 {
     if( key == 'q' || key == 27 ) // ESC
-	{
+    {
         exit( 0 );
-	}
+    }
 }
 
 
@@ -156,7 +156,7 @@ void on_reshape( int w, int h )
 
 void do_preview_txf( int argc, char* argv[] )
 {
-	glutInit( &argc, argv );
+    glutInit( &argc, argv );
     // GLUT_SINGLE does not seem to work with NVidia's OpenGL on GeForce2.
     //glutInitDisplayMode( GLUT_RGB | GLUT_SINGLE );
     glutInitDisplayMode( GLUT_RGBA | GLUT_DOUBLE );

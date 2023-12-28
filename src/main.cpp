@@ -52,8 +52,8 @@ void usage()
     printf( "  -s <size>           Font point size (default 20)\n" );
     printf( "  -o <filename.txf>   Output file for textured font\n" );
     printf( "  -q                  Quiet; no output\n" );
-	
-	finalize();
+
+    finalize();
 }
 
 
@@ -68,9 +68,9 @@ int main( int argc, char** argv )
     char outfile[FILENAME_MAX];
     std::string codesfile;
     char* codes = _default_codes;
-    
-	initialize( argc, argv );
-	
+
+    initialize( argc, argv );
+
     if( argc < 2 )
     {        
         usage();       
@@ -236,7 +236,7 @@ int main( int argc, char** argv )
 #else
     finalize();
 #endif
-	
+
     return 0;
 }
 

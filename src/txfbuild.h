@@ -15,5 +15,5 @@ int build_txf(TexFontWriter& fontw,
          int psize,
          int gap,
          bool asBitmap);
-	 
+
 #endif /* __TXFBUILD_H__ */
