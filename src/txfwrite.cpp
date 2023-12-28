@@ -75,12 +75,12 @@ void TexFontWriter::write( const char* filename )
 
 #ifdef DEBUG
 
-void TexFontWriter::dump( int pitch, bool crop )
+void TexFontWriter::dump_to_console( bool crop )
 {
-    int x, y, w, h;    
+    int x, y, w, h, pitch;    
 	unsigned char* buf = tex_image;
 	
-	w = tex_width;
+	pitch = w = tex_width;
 	h = tex_height;
 
 	printf( "txf dump:  pitch=%d  w=%d h=%d crop=%s\n", pitch, w, h, bool_to_str( crop ) );

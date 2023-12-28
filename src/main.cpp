@@ -225,8 +225,8 @@ int main( int argc, char** argv )
     fontw.tex_image = g_txf.buffer;
     fontw.write( outfile );
   
-#ifdef DEBUG	
-    fontw.dump( 256 );
+#ifdef DEBUG
+    fontw.dump_to_console();
 #endif
 
 #ifdef DISPLAY
@@ -235,6 +235,8 @@ int main( int argc, char** argv )
     free( g_txf.buffer );
 #endif
 
+	printf(" DONE ");
+	
     return 0;
 }
 

@@ -1,5 +1,5 @@
-#ifndef __txfwrite_H__
-#define __txfwrite_H__
+#ifndef __TXFWRITE_H__
+#define __TXFWRITE_H__
 
 #include <assert.h>
 #include <stdio.h>
@@ -13,6 +13,7 @@
 
 #include "global.h"
 #include "utils.h"
+
 
 struct TexGlyphInfo
 {
@@ -40,7 +41,7 @@ struct TexFontWriter
     ~TexFontWriter();
 
 #if DEBUG
-    void dump( int pitch, bool crop = false);
+    void dump_to_console( bool crop = false);
 #endif
 
     void setGlyphCount( int );
@@ -61,4 +62,4 @@ struct TexFontWriter
 };
 
 
-#endif /* __txfwrite_H__ */
+#endif /* __TXFWRITE_H__ */

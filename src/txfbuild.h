@@ -1,5 +1,5 @@
-#ifndef __BUILDTXF_H__
-#define __BUILDTXF_H__
+#ifndef __TXFBUILD_H__
+#define __TXFBUILD_H__
 
 #include "global.h"
 #include "txfwrite.h"
@@ -16,4 +16,4 @@ int build_txf(TexFontWriter& fontw,
          int gap,
          bool asBitmap);
 	 
-#endif /* __BUILDTXF_H__ */
+#endif /* __TXFBUILD_H__ */

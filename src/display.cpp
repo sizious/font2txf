@@ -131,7 +131,9 @@ void on_display()
 void on_keyFunc( unsigned char key, int, int )
 {
     if( key == 'q' || key == 27 ) // ESC
+	{
         exit( 0 );
+	}
 }
 
 
