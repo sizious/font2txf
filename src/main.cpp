@@ -52,6 +52,8 @@ void usage()
     printf( "  -s <size>           Font point size (default 20)\n" );
     printf( "  -o <filename.txf>   Output file for textured font\n" );
     printf( "  -q                  Quiet; no output\n" );
+	
+	finalize();
 }
 
 
@@ -67,11 +69,11 @@ int main( int argc, char** argv )
     std::string codesfile;
     char* codes = _default_codes;
     
+	initialize( argc, argv );
+	
     if( argc < 2 )
-    {
-        program_name_initialize( argv[0] );
-        usage();
-        program_name_finalize();
+    {        
+        usage();       
         return 0;
     }
 
@@ -232,10 +234,8 @@ int main( int argc, char** argv )
 #ifdef DISPLAY
     do_preview_txf( argc, argv );
 #else
-    free( g_txf.buffer );
+    finalize();
 #endif
-
-	printf(" DONE ");
 	
     return 0;
 }

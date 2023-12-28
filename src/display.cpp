@@ -171,7 +171,7 @@ void do_preview_txf( int argc, char* argv[] )
 
     build_font_texture( &g_txf );
 
-    free( g_txf.buffer );
+    finalize();
 
     glutMainLoop();
 }

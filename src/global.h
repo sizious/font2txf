@@ -6,6 +6,8 @@
 
 #include <vector>
 
+#include "utils.h"
+
 #define TTF2TXF_PROGNAME "ttf2txf"
 
 extern std::vector<wchar_t> g_char_codes;
@@ -13,5 +15,8 @@ extern std::vector<wchar_t> g_char_codes;
 extern bool g_verbose;
 
 extern FT_Bitmap g_txf;
+
+void initialize( int argc, char* argv[] );
+void finalize();
 
 #endif /* __GLOBAL_H__ */
