@@ -2,8 +2,8 @@
 //
 // $Id: ttf2txf.cpp,v 1.11 2001/10/20 23:46:37 karl Exp $
 //
-// Converts fonts to TXF texture font format.
-// Uses Freetype 2.0.
+// Converts TrueType, Type 1 and OpenType fonts to TXF texture font format.
+// Uses FreeType 2.0.
 //
 //==========================================================================*/
 
