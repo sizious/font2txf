@@ -14,7 +14,6 @@
     * Save as bitmap.
 */
 
-#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,10 +23,10 @@
 #include <string>
 #include <vector>
 
-#include "utils.h"
 #include "txfbuild.h"
 #include "charset.h"
 #include "display.h"
+
 
 std::vector<wchar_t> g_char_codes;
 
@@ -40,7 +39,7 @@ char _default_codes[] = " ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqr
 
 void usage()
 {
-    printf( "%s version %s (%s)\n\n", TTF2TXF_PROGNAME, TTF2TXF_VERSION, __DATE__ );
+    printf( "%s version %s (%s)\n\n", PROGRAM_NAME, PROGRAM_VERSION, __DATE__ );
     printf( "Usage: %s [options] <TrueType Font>\n\n", program_name_get() );
     printf( "Options:\n" );
     printf( "  -w <width>          Texture width  (default 256)\n" );
@@ -87,7 +86,7 @@ int main( int argc, char** argv )
     {
         if( *argv[i] == '-' )
         {
-            char* cp = argv[i] + 1;
+            char* cp = (argv[ i ] + 1);
 
             if( *cp == 'w' )
             {
@@ -108,7 +107,7 @@ int main( int argc, char** argv )
                 i++;
                 if( i >= argc )
                     break;
-                codes = argv[i];
+                codes = argv[ i ];
                 printf("codes: %s\n", codes);
             }
             else if( *cp == 'b' )
@@ -121,14 +120,14 @@ int main( int argc, char** argv )
                 i++;
                 if( i >= argc )
                     break;
-                gap = atoi(argv[i]);
+                gap = atoi( argv[i] );
             }
             else if( *cp == 's' )
             {
                 i++;
                 if( i >= argc )
                     break;
-                size = atoi(argv[i]);
+                size = atoi( argv[i] );
             }
             else if( *cp == 'o' )
             {
@@ -209,8 +208,12 @@ int main( int argc, char** argv )
 
     fontw.num_glyphs = build_txf( fontw, infile, g_char_codes, &g_txf, size, gap,
                                   asBitmap );
+
     if( ! fontw.num_glyphs )
+	{
+        finalize();
         return -1;
+	}
 
     if( g_verbose )
     {
@@ -226,7 +229,7 @@ int main( int argc, char** argv )
 
     fontw.tex_image = g_txf.buffer;
     fontw.write( outfile );
-  
+
 #ifdef DEBUG
     fontw.dump_to_console();
 #endif

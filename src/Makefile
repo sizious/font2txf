@@ -1,7 +1,6 @@
+# Makefile for the font2txf program.
 
-# Makefile for the ttf2txf program.
-
-TARGET 		= ttf2txf
+TARGET 		= font2txf
 VERSION 	= 1.11.2
 
 CXX 		= g++
@@ -10,7 +9,7 @@ STRIP 		= strip
 CCFLAGS		?= -pipe -Wall -W -g -DDEBUG -DDISPLAY -DFREEGLUT_STATIC -Bstatic -static
 
 INC_FLAGS 	:= -I/usr/local/include/freetype2 -I/usr/local/include
-CXXFLAGS 	:= $(CCFLAGS) -DTTF2TXF_VERSION=\"$(VERSION)\" $(INC_FLAGS)
+CXXFLAGS 	:= $(CCFLAGS) -DPROGRAM_VERSION=\"$(VERSION)\" $(INC_FLAGS)
 
 LDFLAGS		= -L/usr/local/lib
 LDLIBS		= -lfreetype -lfreeglut_static -lopengl32 -lglu32 -lgdi32 -lwinmm

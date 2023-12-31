@@ -8,7 +8,7 @@
 
 #include "utils.h"
 
-#define TTF2TXF_PROGNAME "ttf2txf"
+#define PROGRAM_NAME "font2txf"
 
 extern std::vector<wchar_t> g_char_codes;
 

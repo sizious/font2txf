@@ -162,7 +162,7 @@ void do_preview_txf( int argc, char* argv[] )
     glutInitDisplayMode( GLUT_RGBA | GLUT_DOUBLE );
 
     glutInitWindowSize( g_txf.width, g_txf.rows );
-    glutCreateWindow( TTF2TXF_PROGNAME );
+    glutCreateWindow( PROGRAM_NAME );
     glutReshapeFunc( on_reshape );
     glutDisplayFunc( on_display );
     glutKeyboardFunc( on_keyFunc );
