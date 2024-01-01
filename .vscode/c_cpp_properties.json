@@ -1,0 +1,23 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${env:DREAMSDK_HOME}/include/**",
+                "${env:DREAMSDK_HOME}/usr/include/**",
+                "${env:DREAMSDK_HOME}/usr/local/include/**",
+                "${env:DREAMSDK_HOME}/usr/opt/toolchains/dc/kos/include/**",
+                "${env:DREAMSDK_HOME}/usr/opt/toolchains/dc/kos/addons/include/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "configurationProvider": "ms-vscode.makefile-tools",
+            "compilerPath": "${env:DREAMSDK_HOME}/bin/g++.exe"
+        }
+    ],
+    "version": 4
+}
