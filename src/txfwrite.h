@@ -40,7 +40,7 @@ struct TexFontWriter
     TexFontWriter() : tgi(0) {}
     ~TexFontWriter();
 
-#if DEBUG
+#if _DEBUG
     void dump_to_console( bool crop = false);
 #endif
 

@@ -73,7 +73,7 @@ void TexFontWriter::write( const char* filename )
 }
 
 
-#ifdef DEBUG
+#ifdef _DEBUG
 
 void TexFontWriter::dump_to_console( bool crop )
 {
