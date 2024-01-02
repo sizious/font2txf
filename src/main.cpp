@@ -171,7 +171,7 @@ int main( int argc, char* argv[] )
 		printf("no------------------");
 		usage();
 		exit( -2 );
-	}	
+	}
 
     /* Check if a input font has been passed */
     if( ! infile )
@@ -250,11 +250,13 @@ int main( int argc, char* argv[] )
     fontw.write( outfile );
 
 #ifdef _DEBUG
+#ifdef _FONT_DUMP_TO_CONSOLE
     fontw.dump_to_console();
-#endif
-
-//	func("1", 2, 3);
+#endif // _FONT_DUMP_TO_CONSOLE
+#endif // _DEBUG
 	
+    halt();
+    
 #ifdef DISPLAY
     do_preview_txf( argc, argv );
 #else

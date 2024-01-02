@@ -11,11 +11,11 @@
 #include "utils.h"
 #include "txfbuild.h"
 
-bool loadCharCodesFile(const std::string& filename)
+bool loadCharCodesFile( const std::string& filename )
 {
     FILE* fp;
-    fp = fopen(filename.c_str(), "r");
-    if (fp == NULL)
+    fp = fopen( filename.c_str(), "r" );
+    if ( fp == NULL )
         return false;
 
     for (;;)
@@ -23,10 +23,10 @@ bool loadCharCodesFile(const std::string& filename)
         unsigned int i;
         if (fscanf(fp, " %x", &i) != 1)
             break;
-        g_char_codes.insert(g_char_codes.end(), i);
+        g_char_codes.insert( g_char_codes.end(), i );
     }
 
-    fclose(fp);
+    fclose( fp );
 
     return true;
 }

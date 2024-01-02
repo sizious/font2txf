@@ -2,7 +2,7 @@
 
 char* g_program_name;
 
-void program_name_initialize(char* argv0)
+void program_name_initialize( char* argv0 )
 {
     char* result = basename( argv0 );
     char* buf = strrchr( result, '.' );
@@ -27,4 +27,15 @@ void program_name_finalize()
 const char* bool_to_str( bool b )
 {
     return ( b ? "true" : "false" );
+}
+
+
+
+
+void halt()
+{
+    Console console;
+    console.log("xxx", "aaa");
+//    std::cerr << "Registration failed!" << std::endl;
+//	exit( EXIT_FAILURE );
 }
