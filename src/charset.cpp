@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "utils.h"
+#include "utils.hpp"
 #include "txfbuild.h"
 
 bool loadCharCodesFile( const std::string& filename )

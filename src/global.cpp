@@ -17,6 +17,4 @@ void initialize( int argc, char* argv[] )
 void finalize()
 {
     free( g_txf.buffer );
-
-    program_name_finalize();
 }

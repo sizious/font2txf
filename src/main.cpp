@@ -42,21 +42,23 @@ char _default_codes[] = " ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqr
 
 void usage()
 {
-    printf( "%s version %s (%s)\n\n", PROGRAM_NAME, PROGRAM_VERSION, __DATE__ );
-    printf( "Usage: %s [options] <fontfile.ttf/otf>\n\n", program_name_get() );
-    printf( "Options:\n" );
-    printf( "  -w <width>          Texture width  (default %d)\n", DEFAULT_FONT_WIDTH );
-    printf( "  -h <height>         Texture height (default %d)\n", DEFAULT_FONT_HEIGHT );
+    std::cout << PROGRAM_NAME << " version " << PROGRAM_VERSION << " (" << __DATE__ << ")\n\n";
+    std::cout << "Usage: " << program_name_get() << " [options] <fontfile.ttf/otf>\n\n";
+    std::cout << "Options:\n";
+    std::cout << "  -w <width>          Texture width  (default " << DEFAULT_FONT_WIDTH << ")\n";
+    std::cout << "  -h <height>         Texture height (default " << DEFAULT_FONT_HEIGHT << ")\n";
 /*
-    printf( "  -b                  Create bitmap texture\n" );
+    std::cout << "  -b                  Create bitmap texture\n";
 */
-    printf( "  -f <filename.txt>   File containing character codes to convert\n");
-    printf( "  -c <string>         Characters to convert\n" );
-    printf( "  -g <gap>            Space between glyphs (default %d)\n", DEFAULT_FONT_GAP );
-    printf( "  -s <size>           Font point size (default %d)\n", DEFAULT_FONT_SIZE );
-    printf( "  -o <filename.txf>   Output file for textured font\n" );
-    printf( "  -q                  Quiet; no output\n" );
+    std::cout << "  -f <filename.txt>   File containing character codes to convert\n";
+    std::cout << "  -c <string>         Characters to convert\n";
+    std::cout << "  -g <gap>            Space between glyphs (default " << DEFAULT_FONT_GAP << ")\n";
+    std::cout << "  -s <size>           Font point size (default " << DEFAULT_FONT_SIZE << ")\n";
+    std::cout << "  -o <filename.txf>   Output file for textured font\n";
+    std::cout << "  -q                  Quiet; no output\n";
+    std::cout << std::endl;
 
+halt();
     finalize();
 }
 

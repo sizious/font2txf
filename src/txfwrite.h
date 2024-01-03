@@ -12,7 +12,7 @@
 #include <vector>
 
 #include "global.h"
-#include "utils.h"
+#include "utils.hpp"
 
 
 struct TexGlyphInfo

@@ -44,8 +44,14 @@
         "sstream": "cpp",
         "stdexcept": "cpp",
         "streambuf": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "chrono": "cpp",
+        "codecvt": "cpp",
+        "ctime": "cpp",
+        "ratio": "cpp",
+        "iomanip": "cpp",
+        "filesystem": "cpp"
     },
     "makefile.makefilePath": "${workspaceFolder}\\src\\Makefile",
-    "makefile.makePath": "c:/dreamsdk/usr/bin/make.exe"
+    "makefile.makePath": "C:/DreamSDK/usr/bin/make.exe"
 }

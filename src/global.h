@@ -6,7 +6,7 @@
 
 #include <vector>
 
-#include "utils.h"
+#include "utils.hpp"
 
 #define PROGRAM_NAME "font2txf"
 

@@ -13,7 +13,7 @@
 
 #include <GL/glut.h>
 
-#include "utils.h"
+#include "utils.hpp"
 #include "txfbuild.h"
 #include "charset.h"
 

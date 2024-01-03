@@ -1,27 +1,21 @@
-#include "utils.h"
+#include <filesystem>
+#include <libgen.h>
 
-char* g_program_name;
+#include "utils.hpp"
+
+std::string g_program_name;
+Console g_console;
 
 void program_name_initialize( char* argv0 )
 {
-    char* result = basename( argv0 );
-    char* buf = strrchr( result, '.' );
-    if ( buf != NULL )
-    {
-        int offset = buf - result;
-        result[offset] = '\0';
-    }
-    g_program_name = strdup( result );
+    std::string program_filename(basename( argv0 ) );
+    size_t dotchr = program_filename.find_last_of(".");
+    g_program_name = ( dotchr == std::string::npos ) ? program_filename : program_filename.substr(0, dotchr);
 }
 
-char* program_name_get()
+std::string program_name_get()
 {
     return g_program_name;
-}
-
-void program_name_finalize()
-{
-    free( g_program_name );
 }
 
 const char* bool_to_str( bool b )
@@ -30,12 +24,11 @@ const char* bool_to_str( bool b )
 }
 
 
-
-
 void halt()
 {
-    Console console;
-    console.log("xxx", "aaa");
+    g_console.log("xxx", "log", 0);
+    g_console.warn("xxx", "warn", 1);    
+    g_console.error("xxx", "error", 2);    
 //    std::cerr << "Registration failed!" << std::endl;
 //	exit( EXIT_FAILURE );
 }
