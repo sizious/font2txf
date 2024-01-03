@@ -6,24 +6,27 @@
 #include <iostream>
 #include <utility>
 
+/* Extract the stem (basename) of the current program (usually 'font2txf'). 
+ * This function should be called once at the beginning of the program. */
 void program_name_initialize( char* argv0 );
+
+/* Return the name of the current program (usually 'font2txf'). */
 std::string program_name_get();
 
-const char* bool_to_str( bool b );
+/* Translate a boolean value to 'true' or 'false'. */
+std::string bool_to_str( bool b );
 
-void halt();
-
-/* 
-    Thanks to kungfooman and Nikos Athanasiou
-    See: https://stackoverflow.com/a/52970404
-    See: https://stackoverflow.com/a/33869493/3726096
-*/
-
-class Console {
+/* Console is a "browser-like" logger, based on the work done by kungfooman and Nikos Athanasiou.
+ * See: https://stackoverflow.com/a/52970404
+ * See: https://stackoverflow.com/a/33869493/3726096
+ */
+class Console 
+{
     enum class Severity { Info, Warning, Error, Fatal };
 
     private:
-        // This probably could be better in C++17 (but we want to keep compatibility with older compilers...)
+        /* Translate severity level into the corresponding string.
+         * This probably could be better in C++17 (but we want to keep compatibility with older compilers...). */
         std::string get_severity_name(Severity severity)
         {
             std::string result = std::string();
@@ -45,23 +48,36 @@ class Console {
             return result;
         }
 
+        /* Get the corresponding stream depending of the severity.
+         * Basically, this returns cout or cerr. */
+        std::ostream& get_output_stream(Severity severity)
+        {
+            if ( severity == Severity::Error || severity == Severity::Fatal )
+            {
+                return std::cerr;
+            }
+            return std::cout;
+        }
+
     protected:
         template <typename T>
-        void log_argument(T t)
+        void log_argument(std::ostream& stream, T type)
         {
-            std::cout << t << " ";
+            stream << type << " ";
         }
 
         template <typename... Args>
         void log_trigger(Severity severity, Args&&... args)
         {
+            std::ostream& stream = get_output_stream(severity);
             std::string severity_name = get_severity_name(severity);
-            std::cout << program_name_get() << ": " << severity_name << ( !severity_name.empty() ? ": " : std::string() );
+
+            stream << program_name_get() << ": " << severity_name << ( !severity_name.empty() ? ": " : std::string() );
 
             using expander = int[];
-            (void) expander { 0, ( (void) log_argument( std::forward<Args>(args) ), 0 )... };
+            (void) expander { 0, ( (void) log_argument( stream, std::forward<Args>(args) ), 0 )... };
             
-            std::cout << std::endl;
+            stream << std::endl;
         }
 
     public:

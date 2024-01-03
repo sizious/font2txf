@@ -36,6 +36,9 @@ bool g_verbose = true;
 /* TXF data */
 FT_Bitmap g_txf;
 
+/* Console */
+Console console;
+
 /* Default characters to include in the TXF if nothing specified */
 char _default_codes[] = " ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqrstuvwxyz?.;,!*:\"/+-|'@#$%^&<>()[]{}_";
 
@@ -43,7 +46,12 @@ char _default_codes[] = " ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqr
 void usage()
 {
     std::cout << PROGRAM_NAME << " version " << PROGRAM_VERSION << " (" << __DATE__ << ")\n\n";
+
+    std::cout << "Convert a TrueType or OpenType font file <fontfile.ttf/otf> to a texture\n";
+    std::cout << "mapped font (txf), the font format created by Mark J. Kilgard for GLUT.\n\n";
+
     std::cout << "Usage: " << program_name_get() << " [options] <fontfile.ttf/otf>\n\n";
+
     std::cout << "Options:\n";
     std::cout << "  -w <width>          Texture width  (default " << DEFAULT_FONT_WIDTH << ")\n";
     std::cout << "  -h <height>         Texture height (default " << DEFAULT_FONT_HEIGHT << ")\n";
@@ -55,10 +63,9 @@ void usage()
     std::cout << "  -g <gap>            Space between glyphs (default " << DEFAULT_FONT_GAP << ")\n";
     std::cout << "  -s <size>           Font point size (default " << DEFAULT_FONT_SIZE << ")\n";
     std::cout << "  -o <filename.txf>   Output file for textured font\n";
-    std::cout << "  -q                  Quiet; no output\n";
+    std::cout << "  -q                  Quiet; no output";
     std::cout << std::endl;
 
-halt();
     finalize();
 }
 
@@ -79,9 +86,9 @@ int main( int argc, char* argv[] )
     initialize( argc, argv );
 
     if( argc < 2 )
-    {        
+    {       
         usage();       
-        return 0;
+        return EXIT_SUCCESS;
     }
 
     outfile[ 0 ] = '\0';
@@ -119,7 +126,7 @@ int main( int argc, char* argv[] )
                 codes = argv[ i ];
                 codesFromCmd = true;
 #ifdef _DEBUG
-                printf( "codes: %s\n", codes );
+                std::cout << "setting up codes: " << codes << "\n";
 #endif
             }
 /*
@@ -170,16 +177,15 @@ int main( int argc, char* argv[] )
     /* Options "-c" and "-f" can't be mixed */
     if ( codesFromCmd && !codesfile.empty() )
 	{
-		printf("no------------------");
-		usage();
-		exit( -2 );
+		console.error("unable to use '-c' and '-f' options at the same time");
+        return EXIT_FAILURE;
 	}
 
     /* Check if a input font has been passed */
     if( ! infile )
     {
-        usage();
-        exit( -1 );
+        console.error("unspecified input font file");        
+        return EXIT_FAILURE;
     }
 
     /* Set outfile to base infile and append ".txf" */
@@ -204,7 +210,7 @@ int main( int argc, char* argv[] )
             }
             ++src;
         }
-        strcpy( dst, ".txf" ); 
+        strcpy( dst, ".txf" );
     }
 
     g_txf.width  = fontw.tex_width;
@@ -215,7 +221,11 @@ int main( int argc, char* argv[] )
     // Populate the list of character codes
     if ( !codesfile.empty() )
     {
-        loadCharCodesFile( codesfile );
+        if ( !loadCharCodesFile( codesfile ) )
+        {
+            console.error("cannot load specified character codes file");
+            return EXIT_FAILURE;
+        }
     }
     else
     {
@@ -256,8 +266,6 @@ int main( int argc, char* argv[] )
     fontw.dump_to_console();
 #endif // _FONT_DUMP_TO_CONSOLE
 #endif // _DEBUG
-	
-    halt();
     
 #ifdef DISPLAY
     do_preview_txf( argc, argv );
