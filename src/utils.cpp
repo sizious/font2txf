@@ -29,6 +29,7 @@ void halt()
     g_console.log("xxx", "log", 0);
     g_console.warn("xxx", "warn", 1);    
     g_console.error("xxx", "error", 2);    
+    g_console.fatal("xxx", "error", 2);
 //    std::cerr << "Registration failed!" << std::endl;
 //	exit( EXIT_FAILURE );
 }
