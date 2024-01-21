@@ -1,18 +1,17 @@
 #include <assert.h>
-
 #include "global.h"
 
 
+/* Perform all clean-up when the program exits. */
 void finalize()
 {
-#ifdef _DEBUG
-    console.log( "finalize fired!" );
-#endif // _DEBUG
+    console.debug( "finalize fired!" );
 
     free( g_txf.buffer );
 }
 
 
+/* Initialize some global variables and stuff. */
 bool initialize( int argc, char* argv[] )
 {
     assert( argc );
@@ -20,7 +19,7 @@ bool initialize( int argc, char* argv[] )
 
     if ( std::atexit( finalize ) )
     {
-        console.error( "initialize: atexit() registration failed!" );
+        console.fatal( "initialize: atexit() registration failed!" );
         return false;
     }
 

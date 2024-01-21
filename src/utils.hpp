@@ -84,30 +84,35 @@ class Console
         }
 
     public:
+        /* Display a message. Uses stdout. */
         template <typename... Args>
         void log(Args&&... args)
         {
             log_trigger(Severity::Info, args ...);
         }
 
+        /* Display a warning message: prefix with "warning". Uses stdout. */
         template <typename... Args>
         void warn(Args&&... args)
         {
             log_trigger(Severity::Warning, args ...);
         }
 
+        /* Display an error message: prefix with "error". Uses stderr. */
         template <typename... Args>
         void error(Args&&... args)
         {
             log_trigger(Severity::Error, args ...);
         }
 
+        /* Display a fatal error message: prefix with "fatal". Uses stderr. */
         template <typename... Args>
         void fatal(Args&&... args)
         {
             log_trigger(Severity::Fatal, args ...);
         }
 
+        /* Display a debug message: prefix with "DEBUG". This will work only if _DEBUG macro is defined. */
         template <typename... Args>
         void debug(Args&&... args)
         {

@@ -1,17 +1,6 @@
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ft2build.h>
-#include FT_FREETYPE_H
+#include "charset.h"
 
-#include <string>
-#include <vector>
-
-#include "utils.hpp"
-#include "txfbuild.h"
-
-bool loadCharCodesFile( const std::string& filename )
+bool load_charcodes_file( const std::string& filename )
 {
     FILE* fp;
     fp = fopen( filename.c_str(), "r" );

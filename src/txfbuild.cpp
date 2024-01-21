@@ -91,10 +91,7 @@ static FT_Error render_glyph( FT_Bitmap* img, FT_GlyphSlot glyph,
 }
 
 
-/**
-  Returns number of glyphs added or zero if fails.
-*/
-
+/* Returns number of glyphs added or zero if fails. */
 int build_txf( TexFontWriter& fontw,
                const char* file,
                const std::vector<wchar_t>& codes,
@@ -108,16 +105,14 @@ int build_txf( TexFontWriter& fontw,
     FT_Error error;
     FT_GlyphSlot glyph;
     FT_Size size;
-    FT_F26Dot6 start_x;
-    FT_F26Dot6 step_y;
-    FT_F26Dot6 x, y;
-    int count = 0;
-    int fail = 0;
+    FT_F26Dot6 start_x, step_y, x, y;
+    int count = 0, fail = 0;
 
 
     error = FT_Init_FreeType( &library );
     if( error )
     {
+        console.fatal( "unable to initialize FreeType library" );
         return 0;
     }
 
@@ -125,6 +120,7 @@ int build_txf( TexFontWriter& fontw,
     error = FT_New_Face( library, file, 0, &face );
     if( error )
     {
+        console.fatal( "unable to initialize new face" );
         return 0;
     }
 
@@ -152,7 +148,7 @@ int build_txf( TexFontWriter& fontw,
 
 
     fontw.setGlyphCount( face->num_glyphs );
-    //fontw.max_ascent  = size->metrics.y_ppem;
+    // fontw.max_ascent  = size->metrics.y_ppem;
     // fontw.max_ascent  = FT_PIXELS(face->ascender);
     // fontw.max_descent = -FT_PIXELS(face->descender);
     fontw.max_ascent  = FT_PIXELS( (int) (face->ascender * (float) psize / 30.0f) );

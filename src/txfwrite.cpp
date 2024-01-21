@@ -25,7 +25,7 @@ void TexFontWriter::write( const char* filename )
     fp = fopen( filename, "wb" );
     if( ! fp )
     {
-        fprintf( stderr, "Failed to open %s\n", filename );
+        console.fatal( "failed to open: \"", filename, "\"" );
         return;
     }
 
@@ -42,7 +42,7 @@ void TexFontWriter::write( const char* filename )
     
     if ( g_verbose ) 
     {
-        printf("num_glyphs = %d\n", num_glyphs);
+        console.log( "num_glyphs = ", num_glyphs );
     }
 
     for( int i = 0; i < num_glyphs; ++i )
@@ -53,7 +53,7 @@ void TexFontWriter::write( const char* filename )
 
     if( format == TXF_FORMAT_BITMAP )
     {
-        fprintf( stderr, "TXF_FORMAT_BITMAP not handled\n" );
+        console.fatal( "TXF_FORMAT_BITMAP not handled\n" );
     }
     else
     {
@@ -75,6 +75,7 @@ void TexFontWriter::write( const char* filename )
 
 #ifdef _DEBUG
 
+/* Dump the txf content to console (for debugging purpose). */
 void TexFontWriter::dump_to_console( bool crop )
 {
     int x, y, w, h, pitch;    
@@ -83,7 +84,7 @@ void TexFontWriter::dump_to_console( bool crop )
     pitch = w = tex_width;
     h = tex_height;
 
-    printf( "txf dump:  pitch=%d  w=%d h=%d crop=%s\n", pitch, w, h, bool_to_str( crop ) );
+    console.debug( "txf dump:  pitch=", pitch, ", w=", w, ", h=", h, ", crop=", bool_to_str( crop ) );
 
     /* Fit on 80 column terminal. */
     if( crop && w > 39 )
@@ -92,11 +93,14 @@ void TexFontWriter::dump_to_console( bool crop )
     for( y = 0; y < h; y++ )
     {
         for( x = 0; x < w; x++ )
-            printf( "%02x", (int) *(buf + x) );
-        printf( "\n" );
+        {
+            int chr = (int) *(buf + x);
+            printf( "%02x", chr );
+        }
+        std::cout << "\n";
         buf += pitch;
     }
-    printf( "\n" );
+    std::cout << std::endl;
 }
 
 #endif

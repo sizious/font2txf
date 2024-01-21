@@ -25,7 +25,7 @@
 
 #include "txfbuild.h"
 #include "charset.h"
-#include "display.h"
+#include "preview.h"
 
 /* Characters to include in the TXF */
 std::vector<wchar_t> g_char_codes;
@@ -63,7 +63,10 @@ void usage()
     std::cout << "  -g <gap>            Space between glyphs (default " << DEFAULT_FONT_GAP << ")\n";
     std::cout << "  -s <size>           Font point size (default " << DEFAULT_FONT_SIZE << ")\n";
     std::cout << "  -o <filename.txf>   Output file for textured font\n";
-    std::cout << "  -q                  Quiet; no output";
+    std::cout << "  -q                  Quiet; no output\n";
+#ifdef DISPLAY
+    std::cout << "  -p                  Preview; display the output txf at the end of the conversion\n";
+#endif
     std::cout << std::endl;
 }
 
@@ -80,6 +83,9 @@ int main( int argc, char* argv[] )
     char outfile[ FILENAME_MAX ];
     std::string codesfile;
     char* codes = _default_codes;
+#ifdef DISPLAY
+    bool preview_txf = false;
+#endif    
 
     if( !initialize( argc, argv ) )
     {
@@ -160,13 +166,22 @@ int main( int argc, char* argv[] )
             {
                 g_verbose = false;
             }
-            else if (*cp == 'f')
+            else if( *cp == 'f' )
             {
                 i++;
                 if (i >= argc)
                     break;
                 codesfile = argv[ i ];
             }
+#ifdef DISPLAY            
+            else if( *cp == 'p' )
+            {
+                i++;
+                if (i >= argc)
+                    break;
+                preview_txf = true;      
+            }
+#endif            
         }
         else
         {
@@ -221,7 +236,7 @@ int main( int argc, char* argv[] )
     // Populate the list of character codes
     if ( !codesfile.empty() )
     {
-        if ( !loadCharCodesFile( codesfile ) )
+        if ( !load_charcodes_file( codesfile ) )
         {
             console.error( "cannot load specified character codes file" );
             return EXIT_FAILURE;
@@ -268,7 +283,11 @@ int main( int argc, char* argv[] )
 #endif // _DEBUG
 
 #ifdef DISPLAY
-    do_preview_txf( argc, argv );
+    if ( preview_txf )
+    {
+        console.log( "displaying preview..." );
+        do_preview_txf( argc, argv );
+    }
 #endif
 
     return EXIT_SUCCESS;

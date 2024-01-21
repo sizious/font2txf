@@ -1,6 +1,6 @@
 #ifdef DISPLAY
 
-#include "display.h"
+#include "preview.h"
 
 // Uncomment to debug
 #undef GL_EXT_paletted_texture
@@ -173,6 +173,5 @@ void do_preview_txf( int argc, char* argv[] )
 
     glutMainLoop();
 }
-
 
 #endif
