@@ -25,7 +25,6 @@ extern FT_Bitmap g_txf;
 
 extern Console console;
 
-void initialize( int argc, char* argv[] );
-void finalize();
+bool initialize( int argc, char* argv[] );
 
 #endif /* __GLOBAL_H__ */

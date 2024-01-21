@@ -2,19 +2,27 @@
 
 #include "global.h"
 
-void initialize( int argc, char* argv[] )
+
+void finalize()
+{
+#ifdef _DEBUG
+    console.log( "finalize fired!" );
+#endif // _DEBUG
+
+    free( g_txf.buffer );
+}
+
+
+bool initialize( int argc, char* argv[] )
 {
     assert( argc );
     program_name_initialize( argv[0] );
 
     if ( std::atexit( finalize ) )
     {
-//        std::cerr << "Registration failed!" << std::endl;
-//        return EXIT_FAILURE;
+        console.error( "initialize: atexit() registration failed!" );
+        return false;
     }
-}
 
-void finalize()
-{
-    free( g_txf.buffer );
+    return true;
 }

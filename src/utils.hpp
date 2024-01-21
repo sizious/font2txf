@@ -22,7 +22,7 @@ std::string bool_to_str( bool b );
  */
 class Console 
 {
-    enum class Severity { Info, Warning, Error, Fatal };
+    enum class Severity { Info, Warning, Error, Fatal, Debug };
 
     private:
         /* Translate severity level into the corresponding string.
@@ -42,6 +42,9 @@ class Console
                     break;
                 case Severity::Fatal:
                     result = "fatal";
+                    break;                    
+                case Severity::Debug:
+                    result = "DEBUG";
                     break;
             }
 
@@ -63,7 +66,7 @@ class Console
         template <typename T>
         void log_argument(std::ostream& stream, T type)
         {
-            stream << type << " ";
+            stream << type;
         }
 
         template <typename... Args>
@@ -103,7 +106,15 @@ class Console
         void fatal(Args&&... args)
         {
             log_trigger(Severity::Fatal, args ...);
-        }        
+        }
+
+        template <typename... Args>
+        void debug(Args&&... args)
+        {
+#ifdef _DEBUG
+            log_trigger(Severity::Debug, args ...);
+#endif // _DEBUG
+        }              
 };
 
 #endif /* __UTILS_HPP__ */

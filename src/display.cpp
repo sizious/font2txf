@@ -169,9 +169,7 @@ void do_preview_txf( int argc, char* argv[] )
 
     glClearColor( 0.2, 0.2, 0.2, 1.0 );
 
-    build_font_texture( &g_txf );
-
-    finalize();
+    build_font_texture( &g_txf );    
 
     glutMainLoop();
 }

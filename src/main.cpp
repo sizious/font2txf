@@ -65,8 +65,6 @@ void usage()
     std::cout << "  -o <filename.txf>   Output file for textured font\n";
     std::cout << "  -q                  Quiet; no output";
     std::cout << std::endl;
-
-    finalize();
 }
 
 
@@ -83,7 +81,10 @@ int main( int argc, char* argv[] )
     std::string codesfile;
     char* codes = _default_codes;
 
-    initialize( argc, argv );
+    if( !initialize( argc, argv ) )
+    {
+        return EXIT_SUCCESS;
+    }
 
     if( argc < 2 )
     {       
@@ -125,9 +126,8 @@ int main( int argc, char* argv[] )
                     break;
                 codes = argv[ i ];
                 codesFromCmd = true;
-#ifdef _DEBUG
-                std::cout << "setting up codes: " << codes << "\n";
-#endif
+                
+                console.debug( "setting up codes: \"", codes, "\"" );
             }
 /*
             else if( *cp == 'b' )
@@ -177,14 +177,14 @@ int main( int argc, char* argv[] )
     /* Options "-c" and "-f" can't be mixed */
     if ( codesFromCmd && !codesfile.empty() )
 	{
-		console.error("unable to use '-c' and '-f' options at the same time");
+		console.error( "unable to use '-c' and '-f' options at the same time" );
         return EXIT_FAILURE;
 	}
 
     /* Check if a input font has been passed */
     if( ! infile )
     {
-        console.error("unspecified input font file");        
+        console.fatal( "unspecified input font file" );        
         return EXIT_FAILURE;
     }
 
@@ -223,7 +223,7 @@ int main( int argc, char* argv[] )
     {
         if ( !loadCharCodesFile( codesfile ) )
         {
-            console.error("cannot load specified character codes file");
+            console.error( "cannot load specified character codes file" );
             return EXIT_FAILURE;
         }
     }
@@ -232,7 +232,7 @@ int main( int argc, char* argv[] )
         int i = 0;
         while ( codes[i] != '\0' )
         {
-            g_char_codes.insert(g_char_codes.end(), (wchar_t) codes[i]);
+            g_char_codes.insert( g_char_codes.end(), (wchar_t) codes[i] );
             i++;
         }
     }
@@ -242,20 +242,20 @@ int main( int argc, char* argv[] )
 
     if( ! fontw.num_glyphs )
 	{
-        finalize();
-        return -1;
+        console.error( "there is no glyphs in this font" );
+        return EXIT_FAILURE;
 	}
 
     if( g_verbose )
     {
-        printf( "TexFont [\n" );
-        printf( "  format:      %d\n", fontw.format );
-        printf( "  tex_width:   %d\n", fontw.tex_width );
-        printf( "  tex_height:  %d\n", fontw.tex_height );
-        printf( "  max_ascent:  %d\n", fontw.max_ascent );
-        printf( "  max_descent: %d\n", fontw.max_descent );
-        printf( "  num_glyphs:  %d\n", fontw.num_glyphs );
-        printf( "]\n" );
+        std::cout << "TexFont [\n";
+        std::cout << "  format:      " << fontw.format << "\n";
+        std::cout << "  tex_width:   " << fontw.tex_width << "\n";
+        std::cout << "  tex_height:  " << fontw.tex_height << "\n";
+        std::cout << "  max_ascent:  " << fontw.max_ascent << "\n";
+        std::cout << "  max_descent: " << fontw.max_descent << "\n";
+        std::cout << "  num_glyphs:  " << fontw.num_glyphs << "\n";
+        std::cout << "]" << std::endl;
     }
 
     fontw.tex_image = g_txf.buffer;
@@ -266,14 +266,12 @@ int main( int argc, char* argv[] )
     fontw.dump_to_console();
 #endif // _FONT_DUMP_TO_CONSOLE
 #endif // _DEBUG
-    
+
 #ifdef DISPLAY
     do_preview_txf( argc, argv );
-#else
-    finalize();
 #endif
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 
