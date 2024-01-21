@@ -39,16 +39,22 @@ FT_Bitmap g_txf;
 /* Console */
 Console console;
 
+/* Default characters for the usage help */
+#define DEFAULT_CODES "(space)A[..]Z1234567890a[..]z?.;,!*:\"/+-|'@#$%^&<>()[]{}_"
+
 /* Default characters to include in the TXF if nothing specified */
 char _default_codes[] = " ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqrstuvwxyz?.;,!*:\"/+-|'@#$%^&<>()[]{}_";
 
 
+/* Display help/usage of this tool. */
 void usage()
 {
     std::cout << PROGRAM_NAME << " version " << PROGRAM_VERSION << " (" << __DATE__ << ")\n\n";
 
-    std::cout << "Convert a TrueType or OpenType font file <fontfile.ttf/otf> to a texture\n";
-    std::cout << "mapped font (txf), the font format created by Mark J. Kilgard for GLUT.\n\n";
+    std::cout << "Convert a TrueType or OpenType font file <fontfile.ttf/otf> to a texture mapped\n";
+    std::cout << "font (txf), the font format created by Mark J. Kilgard for the OpenGL Utility\n";
+    std::cout << "Toolkit (GLUT).  This tool is a heavily modified version of \"ttf2txf\"\n";
+    std::cout << "originally written by Chris Laurel for the Celestia project.\n\n";    
 
     std::cout << "Usage: " << program_name_get() << " [options] <fontfile.ttf/otf>\n\n";
 
@@ -62,15 +68,18 @@ void usage()
     std::cout << "  -c <string>         Characters to convert\n";
     std::cout << "  -g <gap>            Space between glyphs (default " << DEFAULT_FONT_GAP << ")\n";
     std::cout << "  -s <size>           Font point size (default " << DEFAULT_FONT_SIZE << ")\n";
-    std::cout << "  -o <filename.txf>   Output file for textured font\n";
+    std::cout << "  -o <filename.txf>   Output file for textured font (default fontfile.txf)\n";
     std::cout << "  -q                  Quiet; no output\n";
 #ifdef DISPLAY
     std::cout << "  -p                  Preview; display the output txf at the end of the conversion\n";
 #endif
+	std::cout << "  -h                  Usage information (you're looking at it)\n";
+
     std::cout << std::endl;
 }
 
 
+/* Entry point */
 int main( int argc, char* argv[] )
 {
     TexFontWriter fontw;
