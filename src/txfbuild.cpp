@@ -73,9 +73,9 @@ static FT_Error render_glyph( FT_Bitmap* img, FT_GlyphSlot glyph,
     }
  
 #ifdef _DEBUG
-    printf( "KR offset %dx%d\n", x_offset, y_offset );
-    printf( "KR left/top %d %d\n", glyph->bitmap_left, glyph->bitmap_top );
-    printf( "KR metrics %ldx%ld %ldx%ld\n", 
+    printf( "  KR offset %dx%d\n", x_offset, y_offset );
+    printf( "  KR left/top %d %d\n", glyph->bitmap_left, glyph->bitmap_top );
+    printf( "  KR metrics %ldx%ld %ldx%ld\n", 
             FT_PIXELS(glyph->metrics.width),
             FT_PIXELS(glyph->metrics.height),
             FT_PIXELS(glyph->metrics.horiBearingX),
@@ -211,7 +211,7 @@ int build_txf( TexFontWriter& fontw,
             tgi.y       = fontw.tex_height - y + tgi.yoffset;
 
 #ifdef _DEBUG
-            printf("char: \"%c\"  code: %04x  size=%dx%d\n", tgi.c, tgi.c, tgi.width, tgi.height);
+            printf( "char: \"%c\"  code: %04x  size=%dx%d\n", tgi.c, tgi.c, tgi.width, tgi.height );
 #endif
 
             x = nextX;

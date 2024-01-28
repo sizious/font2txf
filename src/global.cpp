@@ -1,13 +1,28 @@
 #include <assert.h>
 #include "global.h"
 
+/* Characters to include in the TXF */
+std::vector<wchar_t> g_char_codes;
+
+/* Verbose switch */
+bool g_verbose = true;
+
+/* TXF data */
+FT_Bitmap g_txf;
+
+/* Console */
+Console console;
 
 /* Perform all clean-up when the program exits. */
 void finalize()
 {
     console.debug( "finalize fired!" );
 
-    free( g_txf.buffer );
+    if( g_txf.buffer )
+    {        
+        free( g_txf.buffer );
+        g_txf.buffer = nullptr;
+    }
 }
 
 

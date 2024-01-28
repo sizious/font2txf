@@ -10,7 +10,8 @@
             "request": "launch",
             "program": "${workspaceFolder}/src/font2txf.exe",
             "args": [
-                "agitpropc.otf"
+                "-h",
+                "123"                
             ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

@@ -27,20 +27,6 @@
 #include "charset.h"
 #include "preview.h"
 
-/* Characters to include in the TXF */
-std::vector<wchar_t> g_char_codes;
-
-/* Verbose switch */
-bool g_verbose = true;
-
-/* TXF data */
-FT_Bitmap g_txf;
-
-/* Console */
-Console console;
-
-/* Default characters for the usage help */
-#define DEFAULT_CODES "(space)A[..]Z1234567890a[..]z?.;,!*:\"/+-|'@#$%^&<>()[]{}_"
 
 /* Default characters to include in the TXF if nothing specified */
 char _default_codes[] = " ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqrstuvwxyz?.;,!*:\"/+-|'@#$%^&<>()[]{}_";
@@ -60,10 +46,10 @@ void usage()
 
     std::cout << "Options:\n";
     std::cout << "  -w <width>          Texture width  (default " << DEFAULT_FONT_WIDTH << ")\n";
-    std::cout << "  -h <height>         Texture height (default " << DEFAULT_FONT_HEIGHT << ")\n";
-/*
+    std::cout << "  -e <height>         Texture height (default " << DEFAULT_FONT_HEIGHT << ")\n";
+#if 0
     std::cout << "  -b                  Create bitmap texture\n";
-*/
+#endif
     std::cout << "  -f <filename.txt>   File containing character codes to convert\n";
     std::cout << "  -c <string>         Characters to convert\n";
     std::cout << "  -g <gap>            Space between glyphs (default " << DEFAULT_FONT_GAP << ")\n";
@@ -88,6 +74,7 @@ int main( int argc, char* argv[] )
     int size = DEFAULT_FONT_SIZE;
     bool asBitmap = false;
 	bool codesFromCmd = false;
+    bool h_switch = false;
     char* infile = 0;
     char outfile[ FILENAME_MAX ];
     std::string codesfile;
@@ -113,45 +100,51 @@ int main( int argc, char* argv[] )
     fontw.tex_width  = DEFAULT_FONT_WIDTH;
     fontw.tex_height = DEFAULT_FONT_HEIGHT;
 
-    /* Options parsing */
+    /* Simple options parsing */
     for( i = 1; i < argc; i++ )
     {
         if( *argv[i] == '-' )
         {
             char* cp = ( argv[ i ] + 1 );
-
+            
             if( *cp == 'w' )
             {
+                /* Width */
                 i++;
                 if( i >= argc )
                     break;
                 fontw.tex_width = atoi( argv[ i ] );
             }
-            else if( *cp == 'h' )
+            else if( *cp == 'e' || *cp == 'h' )
             {
+                /* Height */
+                h_switch = true; // Compatibility: Previously, "-h" was for "height", and now it's for "help"
                 i++;
                 if( i >= argc )
                     break;
-                fontw.tex_height = atoi( argv[ i ] );
+                fontw.tex_height = atoi( argv[ i ] ); 
+                h_switch = ( ! fontw.tex_height ); // reevaluate h_switch; if tex_height > 0, then finally it's "height"
             }
             else if( *cp == 'c' )
             {
+                /* Characters to convert (from command-line) */
                 i++;
                 if( i >= argc )
                     break;
                 codes = argv[ i ];
                 codesFromCmd = true;
-                
                 console.debug( "setting up codes: \"", codes, "\"" );
             }
-/*
+#if 0
             else if( *cp == 'b' )
             {
+                /* Bitmap texture */
                 asBitmap = true;
             }
-*/
+#endif
             else if( *cp == 'g' )
             {
+                /* Spaces between glyphs (gap) */
                 i++;
                 if( i >= argc )
                     break;
@@ -159,6 +152,7 @@ int main( int argc, char* argv[] )
             }
             else if( *cp == 's' )
             {
+                /* Font point size */
                 i++;
                 if( i >= argc )
                     break;
@@ -166,6 +160,7 @@ int main( int argc, char* argv[] )
             }
             else if( *cp == 'o' )
             {
+                /* Output txf filename */
                 i++;
                 if( i >= argc )
                     break;
@@ -173,6 +168,7 @@ int main( int argc, char* argv[] )
             }
             else if( *cp == 'q' )
             {
+                /* Disable verbosity */
                 g_verbose = false;
             }
             else if( *cp == 'f' )
@@ -185,32 +181,44 @@ int main( int argc, char* argv[] )
 #ifdef DISPLAY            
             else if( *cp == 'p' )
             {
-                i++;
-                if (i >= argc)
-                    break;
                 preview_txf = true;      
             }
 #endif            
         }
         else
         {
+            /* Input ttf/otf file */
             infile = argv[ i ];
         }
     }
-	
-    /* Options "-c" and "-f" can't be mixed */
-    if ( codesFromCmd && !codesfile.empty() )
-	{
-		console.error( "unable to use '-c' and '-f' options at the same time" );
-        return EXIT_FAILURE;
-	}
 
-    /* Check if a input font has been passed */
+    /* Display help info, if not input file is provided and "-h" is used "alone" */
+    if( h_switch && ! infile )
+    {
+        usage();
+        return EXIT_SUCCESS;
+    }
+
+     /* Check if a input font has been passed */
     if( ! infile )
     {
         console.fatal( "unspecified input font file" );        
         return EXIT_FAILURE;
     }
+
+    /* Check if input file is provided */
+    if( ! file_exists(infile) )
+    {        
+        console.fatal( "input file not found" );
+        return EXIT_FAILURE;
+    }
+	
+    /* Options "-c" and "-f" can't be mixed */
+    if( codesFromCmd && ! codesfile.empty() )
+	{
+		console.error( "unable to use '-c' and '-f' options at the same time" );
+        return EXIT_FAILURE;
+	}
 
     /* Set outfile to base infile and append ".txf" */
     if( outfile[ 0 ] == '\0' )

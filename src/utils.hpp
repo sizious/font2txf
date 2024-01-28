@@ -1,10 +1,12 @@
 #ifndef __UTILS_HPP__
 #define __UTILS_HPP__
 
+#include <memory>
 #include <cstdio>
 #include <string>
 #include <iostream>
 #include <utility>
+#include <stdexcept>
 
 /* Extract the stem (basename) of the current program (usually 'font2txf'). 
  * This function should be called once at the beginning of the program. */
@@ -15,6 +17,9 @@ std::string program_name_get();
 
 /* Translate a boolean value to 'true' or 'false'. */
 std::string bool_to_str( bool b );
+
+/* Check if a file exists */
+bool file_exists( const std::string& name );
 
 /* Console is a "browser-like" logger, based on the work done by kungfooman and Nikos Athanasiou.
  * See: https://stackoverflow.com/a/52970404

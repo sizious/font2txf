@@ -1,0 +1,16 @@
+font2txf: xxx log 0 
+font2txf: warning: xxx warn 1 
+font2txf version 1.11.2 (Jan  3 2024)
+
+Usage: font2txf [options] <fontfile.ttf/otf>
+
+Options:
+  -w <width>          Texture width  (default 256)
+  -h <height>         Texture height (default 256)
+  -f <filename.txt>   File containing character codes to convert
+  -c <string>         Characters to convert
+  -g <gap>            Space between glyphs (default 1)
+  -s <size>           Font point size (default 20)
+  -o <filename.txf>   Output file for textured font
+  -q                  Quiet; no output
+

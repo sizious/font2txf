@@ -17,6 +17,9 @@
 #define DEFAULT_FONT_HEIGHT 256
 #define DEFAULT_FONT_WIDTH 256
 
+/* Default characters for the usage help */
+#define DEFAULT_CODES "(space)A[..]Z1234567890a[..]z?.;,!*:\"/+-|'@#$%^&<>()[]{}_"
+
 extern std::vector<wchar_t> g_char_codes;
 
 extern bool g_verbose;

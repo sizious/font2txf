@@ -1,6 +1,15 @@
 #include <filesystem>
 #include <libgen.h>
 
+#include <sys/stat.h>
+#include <unistd.h>
+#include <string>
+#include <fstream>
+
+#include <memory>
+#include <string>
+#include <stdexcept>
+
 #include "utils.hpp"
 
 std::string g_program_name;
@@ -20,4 +29,10 @@ std::string program_name_get()
 std::string bool_to_str( bool b )
 {
     return ( b ? "true" : "false" );
+}
+
+bool file_exists( const std::string& name )
+{
+  struct stat buf;   
+  return ( stat ( name.c_str(), &buf ) == 0 ); 
 }
