@@ -17,8 +17,17 @@
 #define DEFAULT_FONT_HEIGHT 256
 #define DEFAULT_FONT_WIDTH 256
 
-/* Default characters for the usage help */
-#define DEFAULT_CODES "(space)A[..]Z1234567890a[..]z?.;,!*:\"/+-|'@#$%^&<>()[]{}_"
+/* Default Charset Codes */
+#define DEFAULT_CHARCODES_POS0_SPC " "
+#define DEFAULT_CHARCODES_POS1_AZU "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+#define DEFAULT_CHARCODES_POS2_NUM "1234567890"
+#define DEFAULT_CHARCODES_POS3_AZL "abcdefghijklmnopqrstuvwxyz"
+#define DEFAULT_CHARCODES_POS4_SYM "?.;,!*:\"/+-|'@#$%^&<>()[]{}_"
+
+/* Default Charset Codes for the help screen */
+#define DEFAULT_CHARCODES "(space)A..Z1..9a..z" DEFAULT_CHARCODES_POS4_SYM
+
+extern char g_default_char_codes[];
 
 extern std::vector<wchar_t> g_char_codes;
 

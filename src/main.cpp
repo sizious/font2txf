@@ -28,10 +28,6 @@
 #include "preview.h"
 
 
-/* Default characters to include in the TXF if nothing specified */
-char _default_codes[] = " ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqrstuvwxyz?.;,!*:\"/+-|'@#$%^&<>()[]{}_";
-
-
 /* Display help/usage of this tool. */
 void usage()
 {
@@ -45,13 +41,17 @@ void usage()
     std::cout << "Usage: " << program_name_get() << " [options] <fontfile.ttf/otf>\n\n";
 
     std::cout << "Options:\n";
-    std::cout << "  -w <width>          Texture width  (default " << DEFAULT_FONT_WIDTH << ")\n";
+    std::cout << "  -w <width>          Texture width (default " << DEFAULT_FONT_WIDTH << ")\n";
     std::cout << "  -e <height>         Texture height (default " << DEFAULT_FONT_HEIGHT << ")\n";
 #if 0
     std::cout << "  -b                  Create bitmap texture\n";
 #endif
-    std::cout << "  -f <filename.txt>   File containing character codes to convert\n";
-    std::cout << "  -c <string>         Characters to convert\n";
+    std::cout << "  -c <string>         Characters to convert; directly read from command-line\n";    
+    std::cout << "                      (Default: `" << DEFAULT_CHARCODES << "`)\n";
+    std::cout << "                      (This option cannot be mixed with '-f')\n";    
+    std::cout << "  -f <filename.txt>   Text file containing the character codes to convert\n";
+    std::cout << "                      Using this option will replace default characters.\n";
+    std::cout << "                      (This option cannot be mixed with '-c')\n";    
     std::cout << "  -g <gap>            Space between glyphs (default " << DEFAULT_FONT_GAP << ")\n";
     std::cout << "  -s <size>           Font point size (default " << DEFAULT_FONT_SIZE << ")\n";
     std::cout << "  -o <filename.txf>   Output file for textured font (default fontfile.txf)\n";
@@ -73,19 +73,19 @@ int main( int argc, char* argv[] )
     int gap = DEFAULT_FONT_GAP;
     int size = DEFAULT_FONT_SIZE;
     bool asBitmap = false;
-	bool codesFromCmd = false;
+	bool codes_from_cmd = false;
     bool h_switch = false;
     char* infile = 0;
     char outfile[ FILENAME_MAX ];
     std::string codesfile;
-    char* codes = _default_codes;
+    char* codes = g_default_char_codes;
 #ifdef DISPLAY
     bool preview_txf = false;
 #endif    
 
     if( !initialize( argc, argv ) )
     {
-        return EXIT_SUCCESS;
+        return EXIT_FAILURE;
     }
 
     if( argc < 2 )
@@ -109,7 +109,7 @@ int main( int argc, char* argv[] )
             
             if( *cp == 'w' )
             {
-                /* Width */
+                /* Width */                
                 i++;
                 if( i >= argc )
                     break;
@@ -117,13 +117,18 @@ int main( int argc, char* argv[] )
             }
             else if( *cp == 'e' || *cp == 'h' )
             {
-                /* Height */
-                h_switch = true; // Compatibility: Previously, "-h" was for "height", and now it's for "help"
+                /* Height ("e" but could be "h" for compatibility) */
+                
+                /* Handle compatibility */
+                h_switch = true;
+                
                 i++;
                 if( i >= argc )
                     break;
                 fontw.tex_height = atoi( argv[ i ] ); 
-                h_switch = ( ! fontw.tex_height ); // reevaluate h_switch; if tex_height > 0, then finally it's "height"
+
+                /* Reevaluate h_switch; if tex_height > 0, then finally it's "height" */
+                h_switch = ( ! fontw.tex_height );
             }
             else if( *cp == 'c' )
             {
@@ -132,7 +137,7 @@ int main( int argc, char* argv[] )
                 if( i >= argc )
                     break;
                 codes = argv[ i ];
-                codesFromCmd = true;
+                codes_from_cmd = true;
                 console.debug( "setting up codes: \"", codes, "\"" );
             }
 #if 0
@@ -192,7 +197,7 @@ int main( int argc, char* argv[] )
         }
     }
 
-    /* Display help info, if not input file is provided and "-h" is used "alone" */
+    /* Display help info, if no input file is provided and "-h" is used "alone" (without "-w") */
     if( h_switch && ! infile )
     {
         usage();
@@ -214,7 +219,7 @@ int main( int argc, char* argv[] )
     }
 	
     /* Options "-c" and "-f" can't be mixed */
-    if( codesFromCmd && ! codesfile.empty() )
+    if( codes_from_cmd && ! codesfile.empty() )
 	{
 		console.error( "unable to use '-c' and '-f' options at the same time" );
         return EXIT_FAILURE;

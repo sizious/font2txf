@@ -35,3 +35,6 @@
 *.ttf
 *.otf
 *.txf
+
+# Other types
+*.log
