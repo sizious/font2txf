@@ -35,9 +35,9 @@ void usage()
     std::cout << "Usage: " << program_name_get() << " [options] <fontfile.ttf/otf>\n\n";
 
     std::cout << "Default character set (see `-c` or `-f` options below): " << "\n";
-    std::cout << "  " << DEFAULT_CHARCODES << "\n";
-    std::cout << "... where " << DEFAULT_CHARCODES_POS1_AZU_SHORT << ": " << DEFAULT_CHARCODES_POS1_AZU << "\n";
-    std::cout << "      and " << DEFAULT_CHARCODES_POS3_AZL_SHORT << ": " << DEFAULT_CHARCODES_POS3_AZL << "\n\n";
+    std::cout << "  " << DEFAULT_CHARCODES << "\n\n";
+//    std::cout << "... where " << DEFAULT_CHARCODES_POS1_AZU_SHORT << ": " << DEFAULT_CHARCODES_POS1_AZU << "\n";
+//    std::cout << "      and " << DEFAULT_CHARCODES_POS3_AZL_SHORT << ": " << DEFAULT_CHARCODES_POS3_AZL << "\n\n";
 
     std::cout << "Options:\n";
     std::cout << "  -w <width>         Texture width (default: " << DEFAULT_FONT_WIDTH << ")\n";
@@ -59,7 +59,7 @@ void usage()
 #ifdef DISPLAY
     std::cout << "  -p                 Preview; display the txf output at the end of the process\n";
 #endif
-	std::cout << "  -h                 Usage information (you're looking at it)\n";
+	std::cout << "  -h                 Usage information (you're looking at it)";
 
     std::cout << std::endl;
 }
