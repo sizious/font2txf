@@ -8,12 +8,6 @@
 //==========================================================================*/
 
 
-/*
- TODO:
-    * Pack glyphs more efficiently.
-    * Save as bitmap.
-*/
-
 #include <cstdio>
 #include <cstdlib>
 #include <string>
@@ -33,33 +27,39 @@ void usage()
 {
     std::cout << PROGRAM_NAME << " version " << PROGRAM_VERSION << " (" << __DATE__ << ")\n\n";
 
-    std::cout << "Convert a TrueType or OpenType font file <fontfile.ttf/otf> to a texture mapped\n";
-    std::cout << "font (txf), the font format created by Mark J. Kilgard for the OpenGL Utility\n";
+    std::cout << "Converts a TrueType/OpenType font file <fontfile.ttf/otf> to a texture mapped\n";
+    std::cout << "font (TXF), the font format created by Mark J. Kilgard for the OpenGL Utility\n";
     std::cout << "Toolkit (GLUT).  This tool is a heavily modified version of \"ttf2txf\"\n";
     std::cout << "originally written by Chris Laurel for the Celestia project.\n\n";    
 
     std::cout << "Usage: " << program_name_get() << " [options] <fontfile.ttf/otf>\n\n";
 
+    std::cout << "Default character set (see `-c` or `-f` options below): " << "\n";
+    std::cout << "  " << DEFAULT_CHARCODES << "\n";
+    std::cout << "... where " << DEFAULT_CHARCODES_POS1_AZU_SHORT << ": " << DEFAULT_CHARCODES_POS1_AZU << "\n";
+    std::cout << "      and " << DEFAULT_CHARCODES_POS3_AZL_SHORT << ": " << DEFAULT_CHARCODES_POS3_AZL << "\n\n";
+
     std::cout << "Options:\n";
-    std::cout << "  -w <width>          Texture width (default " << DEFAULT_FONT_WIDTH << ")\n";
-    std::cout << "  -e <height>         Texture height (default " << DEFAULT_FONT_HEIGHT << ")\n";
-#if 0
-    std::cout << "  -b                  Create bitmap texture\n";
+    std::cout << "  -w <width>         Texture width (default: " << DEFAULT_FONT_WIDTH << ")\n";
+    std::cout << "  -e <height>        Texture height (default: " << DEFAULT_FONT_HEIGHT << ")\n";
+    std::cout << "                     This option may also be mapped to `-h` for compatibility\n";
+#if 0 /* Disabled for now */
+    std::cout << "  -b                 Create bitmap texture\n";
 #endif
-    std::cout << "  -c <string>         Characters to convert; directly read from command-line\n";    
-    std::cout << "                      (Default: `" << DEFAULT_CHARCODES << "`)\n";
-    std::cout << "                      (This option cannot be mixed with '-f')\n";    
-    std::cout << "  -f <filename.txt>   Text file containing the character codes to convert\n";
-    std::cout << "                      Using this option will replace default characters.\n";
-    std::cout << "                      (This option cannot be mixed with '-c')\n";    
-    std::cout << "  -g <gap>            Space between glyphs (default " << DEFAULT_FONT_GAP << ")\n";
-    std::cout << "  -s <size>           Font point size (default " << DEFAULT_FONT_SIZE << ")\n";
-    std::cout << "  -o <filename.txf>   Output file for textured font (default fontfile.txf)\n";
-    std::cout << "  -q                  Quiet; no output\n";
+    std::cout << "  -c <string>        Characters to convert; read directly from command-line\n";
+    std::cout << "                     Using this option will override default character set\n";    
+    std::cout << "                     Note: This option cannot be mixed with `-f`\n";
+    std::cout << "  -f <filename.txt>  Text file containing the character codes to convert\n";
+    std::cout << "                     Using this option will override default character set\n";
+    std::cout << "                     Note: This option cannot be mixed with `-c`\n";    
+    std::cout << "  -g <gap>           Space between glyphs (default: " << DEFAULT_FONT_GAP << ")\n";
+    std::cout << "  -s <size>          Font point size (default: " << DEFAULT_FONT_SIZE << ")\n";
+    std::cout << "  -o <filename.txf>  Output file for textured font (default: <fontfile>.txf)\n";
+    std::cout << "  -q                 Quiet; no output\n";
 #ifdef DISPLAY
-    std::cout << "  -p                  Preview; display the output txf at the end of the conversion\n";
+    std::cout << "  -p                 Preview; display the txf output at the end of the process\n";
 #endif
-	std::cout << "  -h                  Usage information (you're looking at it)\n";
+	std::cout << "  -h                 Usage information (you're looking at it)\n";
 
     std::cout << std::endl;
 }

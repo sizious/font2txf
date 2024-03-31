@@ -25,7 +25,9 @@
 #define DEFAULT_CHARCODES_POS4_SYM "?.;,!*:\"/+-|'@#$%^&<>()[]{}_"
 
 /* Default Charset Codes for the help screen */
-#define DEFAULT_CHARCODES "(space)A..Z1..9a..z" DEFAULT_CHARCODES_POS4_SYM
+#define DEFAULT_CHARCODES_POS1_AZU_SHORT "(A..Z)"
+#define DEFAULT_CHARCODES_POS3_AZL_SHORT "(a..z)"
+#define DEFAULT_CHARCODES "(space)" DEFAULT_CHARCODES_POS1_AZU_SHORT DEFAULT_CHARCODES_POS2_NUM DEFAULT_CHARCODES_POS3_AZL_SHORT DEFAULT_CHARCODES_POS4_SYM
 
 extern char g_default_char_codes[];
 
