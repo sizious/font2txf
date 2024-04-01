@@ -8,11 +8,12 @@
 #include <string>
 #include <vector>
 
-//#include "global.h"
+#include "global.h"
 #include "utils.hpp"
 
 #include "txfbuild.h"
 
+#define FAILED_BUILD_TXF 0
 
 #define FT_PIXELS(x)  (x >> 6)
 
@@ -112,16 +113,16 @@ int build_txf( TexFontWriter& fontw,
     error = FT_Init_FreeType( &library );
     if( error )
     {
-        console.fatal( "unable to initialize FreeType library" );
-        return 0;
+        FATAL( "unable to initialize FreeType library" );
+        return FAILED_BUILD_TXF;
     }
 
 
     error = FT_New_Face( library, file, 0, &face );
     if( error )
     {
-        console.fatal( "unable to initialize new face" );
-        return 0;
+        FATAL( "unable to initialize new face" );
+        return FAILED_BUILD_TXF;
     }
 
 
@@ -139,7 +140,7 @@ int build_txf( TexFontWriter& fontw,
     error = FT_Set_Pixel_Sizes( face, psize, psize );
     if( error )
     {
-        return 0;
+        return FAILED_BUILD_TXF;
     }
 
 
@@ -147,7 +148,7 @@ int build_txf( TexFontWriter& fontw,
     size  = face->size;
 
 
-    fontw.setGlyphCount( face->num_glyphs );
+    fontw.set_glyph_count( face->num_glyphs );
     // fontw.max_ascent  = size->metrics.y_ppem;
     // fontw.max_ascent  = FT_PIXELS(face->ascender);
     // fontw.max_descent = -FT_PIXELS(face->descender);

@@ -41,11 +41,14 @@ struct TexFontWriter
     ~TexFontWriter();
 
 #if _DEBUG
+    /* Dump the txf content to console (for debugging purpose). */
     void dump_to_console( bool crop = false);
 #endif
 
-    void setGlyphCount( int );
+    void set_glyph_count( int );
     void write( const char* filename );
+
+    void display_info();
 
     int format;
     int tex_width;

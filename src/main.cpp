@@ -22,10 +22,16 @@
 #include "preview.h"
 
 
+/* Display the header... */
+void header()
+{
+    std::cout << PROGRAM_NAME << " version " << PROGRAM_VERSION << " (" << __DATE__ << ")\n\n";
+}
+
 /* Display help/usage of this tool. */
 void usage()
 {
-    std::cout << PROGRAM_NAME << " version " << PROGRAM_VERSION << " (" << __DATE__ << ")\n\n";
+    header();
 
     std::cout << "Converts a TrueType/OpenType font file <fontfile.ttf/otf> to a texture mapped\n";
     std::cout << "font (TXF), the font format created by Mark J. Kilgard for the OpenGL Utility\n";
@@ -138,7 +144,7 @@ int main( int argc, char* argv[] )
                     break;
                 codes = argv[ i ];
                 codes_from_cmd = true;
-                console.debug( "setting up codes: \"", codes, "\"" );
+                DEBUG( "setting up codes: \"", codes, "\"" );
             }
 #if 0
             else if( *cp == 'b' )
@@ -204,24 +210,29 @@ int main( int argc, char* argv[] )
         return EXIT_SUCCESS;
     }
 
-     /* Check if a input font has been passed */
+    if ( g_verbose )
+    {
+        header();
+    }
+
+    /* Check if a input font has been passed */
     if( ! infile )
     {
-        console.fatal( "unspecified input font file" );        
+        FATAL( "unspecified input font file" );        
         return EXIT_FAILURE;
     }
 
     /* Check if input file is provided */
     if( ! file_exists(infile) )
     {        
-        console.fatal( "input file not found" );
+        FATAL( "input file not found" );
         return EXIT_FAILURE;
     }
 	
     /* Options "-c" and "-f" can't be mixed */
     if( codes_from_cmd && ! codesfile.empty() )
 	{
-		console.error( "unable to use '-c' and '-f' options at the same time" );
+		ERR( "unable to use '-c' and '-f' options at the same time" );
         return EXIT_FAILURE;
 	}
 
@@ -260,7 +271,7 @@ int main( int argc, char* argv[] )
     {
         if ( !load_charcodes_file( codesfile ) )
         {
-            console.error( "cannot load specified character codes file" );
+            FATAL( "cannot load specified character codes file" );
             return EXIT_FAILURE;
         }
     }
@@ -279,35 +290,26 @@ int main( int argc, char* argv[] )
 
     if( ! fontw.num_glyphs )
 	{
-        console.error( "there is no glyphs in this font" );
+        FATAL( "there is no glyphs in this font" );
         return EXIT_FAILURE;
 	}
 
-    if( g_verbose )
-    {
-        std::cout << "TexFont [\n";
-        std::cout << "  format:      " << fontw.format << "\n";
-        std::cout << "  tex_width:   " << fontw.tex_width << "\n";
-        std::cout << "  tex_height:  " << fontw.tex_height << "\n";
-        std::cout << "  max_ascent:  " << fontw.max_ascent << "\n";
-        std::cout << "  max_descent: " << fontw.max_descent << "\n";
-        std::cout << "  num_glyphs:  " << fontw.num_glyphs << "\n";
-        std::cout << "]" << std::endl;
-    }
+
+    fontw.display_info();
 
     fontw.tex_image = g_txf.buffer;
     fontw.write( outfile );
 
 #ifdef _DEBUG
-#ifdef _FONT_DUMP_TO_CONSOLE
+#ifdef _DEBUG_FONT_DUMP_TO_CONSOLE
     fontw.dump_to_console();
-#endif // _FONT_DUMP_TO_CONSOLE
+#endif // _DEBUG_FONT_DUMP_TO_CONSOLE
 #endif // _DEBUG
 
 #ifdef DISPLAY
     if ( preview_txf )
     {
-        console.log( "displaying preview..." );
+        LOG( "displaying preview..." );
         do_preview_txf( argc, argv );
     }
 #endif

@@ -7,7 +7,7 @@ TexFontWriter::~TexFontWriter()
 }
 
 
-void TexFontWriter::setGlyphCount( int n )
+void TexFontWriter::set_glyph_count( int n )
 {
     num_glyphs = n;
     delete[] tgi;
@@ -25,7 +25,7 @@ void TexFontWriter::write( const char* filename )
     fp = fopen( filename, "wb" );
     if( ! fp )
     {
-        console.fatal( "failed to open: \"", filename, "\"" );
+        FATAL( "failed to open: \"", filename, "\"" );
         return;
     }
 
@@ -40,11 +40,6 @@ void TexFontWriter::write( const char* filename )
     fwrite( &max_descent, sizeof(int), 1, fp );
     fwrite( &num_glyphs,  sizeof(int), 1, fp );
     
-    if ( g_verbose ) 
-    {
-        console.log( "num_glyphs = ", num_glyphs );
-    }
-
     for( int i = 0; i < num_glyphs; ++i )
     {
         tgi[ i ].dummy = 0;
@@ -53,7 +48,7 @@ void TexFontWriter::write( const char* filename )
 
     if( format == TXF_FORMAT_BITMAP )
     {
-        console.fatal( "TXF_FORMAT_BITMAP not handled\n" );
+        FATAL( "TXF_FORMAT_BITMAP not handled\n" );
     }
     else
     {
@@ -73,9 +68,37 @@ void TexFontWriter::write( const char* filename )
 }
 
 
+void TexFontWriter::display_info()
+{
+    std::string _format = "";
+    switch (format) 
+    {
+        case TexFontWriter::eFormat::TXF_FORMAT_BITMAP:
+            _format = "TXF_FORMAT_BITMAP";
+            break;
+        case TexFontWriter::eFormat::TXF_FORMAT_BYTE:
+            _format = "TXF_FORMAT_BYTE";
+            break;
+        default:
+            _format = "TXF_FORMAT_UNKNOWN";
+            break;
+    }
+
+    if( g_verbose )
+    {
+        std::cout << "TexFont [\n";
+        std::cout << "  format:      " << _format << "\n";
+        std::cout << "  tex_width:   " << tex_width << "\n";
+        std::cout << "  tex_height:  " << tex_height << "\n";
+        std::cout << "  max_ascent:  " << max_ascent << "\n";
+        std::cout << "  max_descent: " << max_descent << "\n";
+        std::cout << "  num_glyphs:  " << num_glyphs << "\n";
+        std::cout << "]" << std::endl;
+    }
+}
+
 #ifdef _DEBUG
 
-/* Dump the txf content to console (for debugging purpose). */
 void TexFontWriter::dump_to_console( bool crop )
 {
     int x, y, w, h, pitch;    
@@ -84,7 +107,7 @@ void TexFontWriter::dump_to_console( bool crop )
     pitch = w = tex_width;
     h = tex_height;
 
-    console.debug( "txf dump:  pitch=", pitch, ", w=", w, ", h=", h, ", crop=", bool_to_str( crop ) );
+    DEBUG( "txf dump:  pitch=", pitch, ", w=", w, ", h=", h, ", crop=", bool_to_str( crop ) );
 
     /* Fit on 80 column terminal. */
     if( crop && w > 39 )

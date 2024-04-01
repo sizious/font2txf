@@ -93,7 +93,7 @@ class Console
         template <typename... Args>
         void log(Args&&... args)
         {
-            log_trigger(Severity::Info, args ...);
+            log_trigger(Severity::Info, args ...);            
         }
 
         /* Display a warning message: prefix with "warning". Uses stdout. */

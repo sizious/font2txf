@@ -44,6 +44,23 @@ extern FT_Bitmap g_txf;
 /* Console */
 extern Console console;
 
+/* Log functions (binded to Console) */
+
+/* Message: Log level (only if verbose) */
+#define LOG( ... ) if ( g_verbose ) { console.log( __VA_ARGS__ ); }
+
+/* Message: Warning Level */
+#define WARN( ... ) console.warn ( __VA_ARGS__ );
+
+/* Message: Error level */
+#define ERR( ... ) console.error( __VA_ARGS__ );
+
+/* Message: Fatal level */
+#define FATAL( ... ) console.fatal( __VA_ARGS__ );
+
+/* Message: Debug level (only if _DEBUG is enabled)*/
+#define DEBUG( ... ) console.debug( __VA_ARGS__ );
+
 /* Initialize some global variables and stuff. */
 bool initialize( int argc, char* argv[] );
 

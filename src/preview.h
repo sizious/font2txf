@@ -9,6 +9,7 @@
 
 #include "global.h"
 
+/* Display converted, output txf file */
 void do_preview_txf( int argc, char* argv[] );
 
 #endif

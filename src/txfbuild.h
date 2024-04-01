@@ -4,10 +4,7 @@
 #include "global.h"
 #include "txfwrite.h"
 
-/**
-  Returns number of glyphs added or zero if fails.
-*/
-
+/* Build the TXF. Returns number of glyphs added or zero if fails. */
 int build_txf(TexFontWriter& fontw,
          const char* file,
          const std::vector<wchar_t>& codes,
