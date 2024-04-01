@@ -5,49 +5,56 @@ ROOTDIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 include $(ROOTDIR)/Makefile.hostdetect
 
 # Include configuration
-include Makefile.cfg
+include $(ROOTDIR)/Makefile.cfg
 
-TARGET 		= font2txf
+# Name of the program
+TARGET      = font2txf
 
-CXX 		= $(HOSTCXX)
-STRIP 		= $(HOSTSTRIP)
+# Utilities
+CXX         = $(HOSTCXX)
+STRIP       = $(HOSTSTRIP)
 
-CCFLAGS		?= -pipe -W
+# Basic compiler flags
+CCFLAGS     ?= -pipe -W
 
-INC_FLAGS 	:= -I/usr/local/include/freetype2 -I/usr/local/include
-CXXFLAGS 	:= $(CCFLAGS) -DPROGRAM_VERSION=\"$(VERSION)\" $(INC_FLAGS)
+# Basic linker flags
+LDFLAGS     = -L/usr/local/lib
+LDLIBS      = -lfreetype
 
-LDFLAGS		= -L/usr/local/lib
-LDLIBS		= -lfreetype
+# Sources and objects (dynamic here)
+SOURCES     = $(wildcard *.cpp)
+OBJECTS     = $(SOURCES:.cpp=.o)
 
-SOURCES 	= $(wildcard *.cpp)
-OBJECTS 	= $(SOURCES:.cpp=.o)
+# Install location
+INSTALLDIR  = $(TOOLINSTALLDIR)
 
-INSTALLDIR 	= $(TOOLINSTALLDIR)
+# Name of the binary file generated
+OUTPUT      = $(TARGET)$(EXECUTABLEEXTENSION)
 
-OUTPUT 		= $(TARGET)$(EXECUTABLEEXTENSION)
-
-# Static
-ifeq ($(STANDALONE_BINARY),1)
-  CXXFLAGS += -Bstatic -static
-endif
-
-# Debug
+# Debug flag
+BUILD_FLAG := -O2
 ifeq ($(DEBUG),1)
-  CXXFLAGS += -Wall -g -D_DEBUG
+  BUILD_FLAG := -g
+  CCFLAGS += -Wall -D_DEBUG
+endif
+CCFLAGS += $(BUILD_FLAG)
+
+# Static flag
+ifeq ($(STANDALONE_BINARY),1)
+  CCFLAGS += -Bstatic -static
 endif
 
-# Enable Preview (uses GLUT)
+# Enable preview (uses GLUT) flag
 ifeq ($(PREVIEW),1)
   # Static Freeglut
   LIB_FREEGLUT := -lfreeglut
   ifeq ($(STANDALONE_BINARY),1)
-    CXXFLAGS += -DFREEGLUT_STATIC
+    CCFLAGS += -DFREEGLUT_STATIC
 	LIB_FREEGLUT := -lfreeglut_static
   endif
 
   # Freeglut
-  CXXFLAGS += -DDISPLAY
+  CCFLAGS += -DDISPLAY
   LDLIBS += $(LIB_FREEGLUT) -lopengl32 -lglu32
 
   # Windows specific libraries used by Freeglut
@@ -55,6 +62,12 @@ ifeq ($(PREVIEW),1)
     LDLIBS += -lgdi32 -lwinmm
   endif
 endif
+
+# Final flags
+INC_FLAGS   := -I/usr/local/include/freetype2 -I/usr/local/include
+CXXFLAGS    := $(CCFLAGS) -DPROGRAM_VERSION=\"$(VERSION)\" $(INC_FLAGS)
+
+# Makefile targets
 
 all: $(TARGET)
 
