@@ -18,8 +18,8 @@ STRIP       = $(HOSTSTRIP)
 CCFLAGS     ?= -pipe -W
 
 # Basic linker flags
-LDFLAGS     = -L/usr/local/lib
-LDLIBS      = -lfreetype
+LDFLAGS     ?= -L/usr/local/lib
+LDLIBS      ?= -lfreetype
 
 # Sources and objects (dynamic here)
 SOURCES     = $(wildcard *.cpp)
