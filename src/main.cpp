@@ -57,7 +57,7 @@ void usage()
     std::cout << "                     Note: This option cannot be mixed with `-f`\n";
     std::cout << "  -f <filename.txt>  Text file containing the character codes to convert\n";
     std::cout << "                     Using this option will override default character set\n";
-    std::cout << "                     Note: This option cannot be mixed with `-c`\n";    
+    std::cout << "                     Note: This option cannot be mixed with `-c`\n";
     std::cout << "  -g <gap>           Space between glyphs (default: " << DEFAULT_FONT_GAP << ")\n";
     std::cout << "  -s <size>          Font point size (default: " << DEFAULT_FONT_SIZE << ")\n";
     std::cout << "  -o <filename.txf>  Output file for textured font (default: <fontfile>.txf)\n";
