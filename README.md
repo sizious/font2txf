@@ -5,7 +5,7 @@ TTF font file:
 (Optional) codepoints file:    
 Font size:    
 Texture size:    
-    
+    - A complete configurable `Makefile.cfg` makefile.
 Guide
 
 The default codepoints file used is the WGL4 file used to generate the font textures distributed with Celestia.
@@ -32,3 +32,7 @@ TXF font file:
 
 
 What things you need to install the software and how to install them Font Generation: ``` .\ttf2txf -o revenant.txf -s 22 -w 256 -h 256 -c "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()-_=+[]{}|;:,.<>~ ?/" revenant.TTF
+
+I used Mark's program called 'gentexfont' to convert
+X fonts into '.txf' format - which can be read into
+the PLIB FNT component.
