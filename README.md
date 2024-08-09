@@ -31,4 +31,4 @@ TXF font file:
 [TXT] wgl4.txt                  04-Feb-2004 02:01  3.8K  
 
 
-What things you need to install the software and how to install them Font Generation: ``` .\ttf2txf -o revenant.txf -s 22 -w 256 -h 25 6 -c "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()-_=+[]{}|;:,.<>~ ?/" revenant.TTF
+What things you need to install the software and how to install them Font Generation: ``` .\ttf2txf -o revenant.txf -s 22 -w 256 -h 256 -c "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()-_=+[]{}|;:,.<>~ ?/" revenant.TTF
