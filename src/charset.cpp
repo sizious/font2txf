@@ -10,12 +10,14 @@ bool load_charcodes_file( const std::string& filename )
     for (;;)
     {
         unsigned int i;
-        if ( fscanf(fp, " %x", &i) != 1 )
+        if ( fscanf( fp, " %x", &i ) != 1 )
             break;
         g_char_codes.insert( g_char_codes.end(), i );
     }
 
     fclose( fp );
 
-    return true;
+    LOG( "loaded ", g_char_codes.size(), " character(s) from charset text file: \"", filename, "\"" );
+
+    return ( g_char_codes.size() > 0 );
 }

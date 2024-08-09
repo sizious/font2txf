@@ -41,7 +41,7 @@ void usage()
 
     std::cout << "Usage: " << program_name_get() << " [options] <fontfile.ttf/otf>\n\n";
 
-    std::cout << "Default character set to convert (see `-c` or `-f` options below): " << "\n";
+    std::cout << "Default charset to convert (see `-c` or `-f` options below): " << "\n";
     std::cout << "  " << DEFAULT_CHARCODES << "\n\n";
 
     std::cout << "Options:\n";
@@ -50,9 +50,9 @@ void usage()
 #if 0 /* Disabled for now */
     std::cout << "  -b                 Create bitmap texture\n";
 #endif
-    std::cout << "  -c <string>        Override character set to convert; read from command-line\n";
+    std::cout << "  -c <string>        Override charset to convert; read from command-line\n";
     std::cout << "                     Cannot be mixed with `-f`\n";
-    std::cout << "  -f <filename.txt>  Override character set to convert; read from a text file\n";
+    std::cout << "  -f <filename.txt>  Override charset to convert; read from a text file\n";
     std::cout << "                     Cannot be mixed with `-c`\n";
     std::cout << "  -g <gap>           Space between glyphs (default: " << DEFAULT_FONT_GAP << ")\n";
     std::cout << "  -s <size>          Font point size (default: " << DEFAULT_FONT_SIZE << ")\n";
@@ -145,7 +145,6 @@ int main( int argc, char* argv[] )
                     break;
                 codes = argv[ i ];
                 c_switch = true;
-                DEBUG( "setting up codes: \"", codes, "\"" );
             }
 #if 0
             else if( *cp == 'b' )
@@ -284,21 +283,29 @@ int main( int argc, char* argv[] )
     // Populate the list of character codes
     if ( !codesfile.empty() )
     {
+        // Populate from the text file (-f)
         if ( !load_charcodes_file( codesfile ) )
         {
-            FATAL( "cannot load specified character codes file" );
+            FATAL( "cannot load the charset from the specified text file" );
             return EXIT_FAILURE;
         }
     }
     else
     {
-        int i = 0;
+        // Populate from the command-line (-c) OR using default charset
+        if( c_switch )
+        {
+            LOG( "setting up new charset: \"", codes, "\"" );
+        }
+
+        i = 0;
         while ( codes[i] != '\0' )
         {
             g_char_codes.insert( g_char_codes.end(), (wchar_t) codes[i] );
             i++;
         }
     }
+    // At this point, the charset is assigned into g_char_codes
 
     txf_encoded_glyphs = build_txf( fontw, infile, g_char_codes, &g_txf, size, gap,
                                     asBitmap );
