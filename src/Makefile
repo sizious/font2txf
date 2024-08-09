@@ -63,6 +63,10 @@ ifeq ($(PREVIEW),1)
   endif
 endif
 
+ifdef MACOS
+  CCFLAGS += -std=gnu++11
+endif
+
 # Final flags
 INC_FLAGS   := -I/usr/local/include/freetype2 -I/usr/local/include
 CXXFLAGS    := $(CCFLAGS) -DPROGRAM_VERSION=\"$(VERSION)\" $(INC_FLAGS)
