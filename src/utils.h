@@ -1,5 +1,5 @@
-#ifndef __UTILS_HPP__
-#define __UTILS_HPP__
+#ifndef __UTILS_H__
+#define __UTILS_H__
 
 #include <memory>
 #include <cstdio>
@@ -142,4 +142,4 @@ class Console
         }              
 };
 
-#endif /* __UTILS_HPP__ */
+#endif /* __UTILS_H__ */

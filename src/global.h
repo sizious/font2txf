@@ -4,7 +4,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include <vector>
-#include "utils.hpp"
+#include "utils.h"
 
 #define PROGRAM_NAME "font2txf"
 
