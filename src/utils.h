@@ -92,15 +92,22 @@ class Console
         template <typename... Args>
         void log_trigger(Severity severity, Args&&... args)
         {
-            std::ostream& stream = get_output_stream(severity);
-            std::string severity_name = get_severity_name(severity);
+            bool allowed = true;
+#ifndef _DEBUG
+            allowed = ( severity != Severity::Debug );
+#endif
+            if( allowed )
+            {
+                std::ostream& stream = get_output_stream(severity);
+                std::string severity_name = get_severity_name(severity);
 
-            stream << program_name_get() << ": " << severity_name << ( !severity_name.empty() ? ": " : std::string() );
+                stream << program_name_get() << ": " << severity_name << ( !severity_name.empty() ? ": " : std::string() );
 
-            using expander = int[];
-            (void) expander { 0, ( (void) log_argument( stream, std::forward<Args>(args) ), 0 )... };
-            
-            stream << std::endl;
+                using expander = int[];
+                (void) expander { 0, ( (void) log_argument( stream, std::forward<Args>(args) ), 0 )... };
+                
+                stream << std::endl;
+            }
         }
 
     public:
@@ -131,15 +138,14 @@ class Console
         {
             log_trigger(Severity::Fatal, args ...);
         }
+        
 
         /* Display a debug message: prefix with "DEBUG". This will work only if _DEBUG macro is defined. */
         template <typename... Args>
         void debug(Args&&... args)
         {
-#ifdef _DEBUG
             log_trigger(Severity::Debug, args ...);
-#endif // _DEBUG
-        }              
+        }
 };
 
 #endif /* __UTILS_H__ */

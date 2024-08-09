@@ -15,7 +15,7 @@ CXX         = $(HOSTCXX)
 STRIP       = $(HOSTSTRIP)
 
 # Basic compiler flags
-CCFLAGS     ?= -pipe -W
+CCFLAGS     ?= -pipe -W -Wunused-parameter
 
 # Basic linker flags
 LDFLAGS     ?= -L/usr/local/lib
