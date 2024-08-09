@@ -10,6 +10,9 @@
 #include <string>
 #include <stdexcept>
 
+#include <iostream>
+#include <sstream>
+
 #include "utils.hpp"
 
 std::string g_program_name;
@@ -29,6 +32,20 @@ std::string program_name_get()
 std::string bool_to_str( bool b )
 {
     return ( b ? "true" : "false" );
+}
+
+std::string int_to_hex(int hex_val)
+{
+    if (hex_val == 0) {
+        return "0x0";
+    }
+    else if (hex_val < 0) {
+        hex_val = -hex_val;
+    }
+
+    std::stringstream ss;
+    ss << "0x" << std::hex << hex_val;
+    return ss.str();
 }
 
 bool file_exists( const std::string& name )

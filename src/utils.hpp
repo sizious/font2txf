@@ -18,8 +18,23 @@ std::string program_name_get();
 /* Translate a boolean value to 'true' or 'false'. */
 std::string bool_to_str( bool b );
 
+/* Convert an integer value (base 10) into a hexadecimal value (base 16).
+ * This is only used for printing formatted values.
+ * Thanks to HeavenHM.
+ * See: https://stackoverflow.com/a/69328575/3726096
+ */
+std::string int_to_hex(int hex_val);
+
 /* Check if a file exists */
 bool file_exists( const std::string& name );
+
+/* Log level set up from the command line */
+enum LogLevel 
+{
+    Quiet = 0, 
+    Standard = 1, 
+    Verbose = 2
+};
 
 /* Console is a "browser-like" logger, based on the work done by kungfooman and Nikos Athanasiou.
  * See: https://stackoverflow.com/a/52970404

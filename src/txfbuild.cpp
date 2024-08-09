@@ -107,128 +107,155 @@ int build_txf( TexFontWriter& fontw,
     FT_GlyphSlot glyph;
     FT_Size size;
     FT_F26Dot6 start_x, step_y, x, y;
-    int count = 0, fail = 0;
+    int count = FAILED_BUILD_TXF, fail = 0;
+    bool init_ft_lib = true, init_ft_face = true, init_ft_pixel_sizes = true;
 
 
     error = FT_Init_FreeType( &library );
     if( error )
     {
-        FATAL( "unable to initialize FreeType library" );
-        return FAILED_BUILD_TXF;
+        init_ft_lib = false;
+        ERR( "unable to initialize FreeType library" );
     }
 
 
-    error = FT_New_Face( library, file, 0, &face );
-    if( error )
+    if ( init_ft_lib )
     {
-        FATAL( "unable to initialize new face" );
-        return FAILED_BUILD_TXF;
-    }
-
-
-    if( g_verbose )
-    {
-        printf( "FT_Face [\n" );
-        printf( "  family_name: \"%s\"\n", face->family_name );
-        printf( "  style_name:  \"%s\"\n",  face->style_name );
-        printf( "  num_glyphs:  %ld\n", face->num_glyphs );
-        dump_char_maps( face );
-        printf( "]\n" );
-    }
-
-
-    error = FT_Set_Pixel_Sizes( face, psize, psize );
-    if( error )
-    {
-        return FAILED_BUILD_TXF;
-    }
-
-
-    glyph = face->glyph;
-    size  = face->size;
-
-
-    fontw.set_glyph_count( face->num_glyphs );
-    // fontw.max_ascent  = size->metrics.y_ppem;
-    // fontw.max_ascent  = FT_PIXELS(face->ascender);
-    // fontw.max_descent = -FT_PIXELS(face->descender);
-    fontw.max_ascent  = FT_PIXELS( (int) (face->ascender * (float) psize / 30.0f) );
-    fontw.max_descent = -FT_PIXELS( (int) (face->descender * (float) psize / 30.0f) );
-
-
-    /* Clear bitmap */
-    memset( img->buffer, 0, img->rows * img->pitch );
-
-
-    step_y = size->metrics.y_ppem + gap;
-
-
-    start_x = gap;
-    x = start_x;
-    y = step_y;
-
-
-    for (unsigned int i = 0; i < codes.size(); i++)
-    {
-        int glyph_index = FT_Get_Char_Index(face, codes[i]);
-        if( glyph_index == 0 )
+        error = FT_New_Face( library, file, 0, &face );
+        if( error )
         {
-            printf( "Code 0x%x is undefined\n", (int) codes[i]);
-            continue;
+            init_ft_face = false;
+            ERR( "unable to initialize new face" );
         }
 
-        error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
-        if( ! error )
+
+        if( init_ft_face )
         {
-            unsigned int nextX = x + FT_PIXELS(glyph->metrics.horiAdvance) + gap;
-
-            if( nextX > img->width )
+            error = FT_Set_Pixel_Sizes( face, psize, psize );
+            if( error )
             {
-                x  = start_x;
-                y += step_y;
-
-                if( (unsigned int) y >= img->rows )
-                {
-                    fprintf( stderr, "Texture too small for %dpt %s\n",
-                             psize, file);
-                    break;
-                }
-
-                nextX = x + FT_PIXELS(glyph->metrics.horiAdvance) + gap;
+                init_ft_pixel_sizes = false;
+                ERR( "unable to set pixel sizes" );
             }
 
-            render_glyph( img, glyph, x, y, ! asBitmap );
 
-            TexGlyphInfo& tgi = fontw.tgi[ count ];
-            count++;
+            if( init_ft_pixel_sizes )
+            {
 
-            tgi.c       = codes[i];
-            tgi.width   = FT_PIXELS(glyph->metrics.width);
-            tgi.height  = FT_PIXELS(glyph->metrics.height);
-            tgi.xoffset = FT_PIXELS(glyph->metrics.horiBearingX);
-            tgi.yoffset = FT_PIXELS(glyph->metrics.horiBearingY) - tgi.height;
-            tgi.advance = FT_PIXELS(glyph->metrics.horiAdvance);
-            tgi.x       = x + tgi.xoffset;
-            tgi.y       = fontw.tex_height - y + tgi.yoffset;
+                switch( g_log_level)
+                {
+                    case LogLevel::Verbose:
+                        printf( "FT_Face [\n" );
+                        printf( "  family_name: \"%s\"\n", face->family_name );
+                        printf( "  style_name:  \"%s\"\n",  face->style_name );
+                        printf( "  num_glyphs:  %ld\n", face->num_glyphs );
+                        dump_char_maps( face );
+                        printf( "]\n" );
+                        break;
+                    case LogLevel::Standard:
+                        LOG( "loading font \"", face->family_name, "\" (", face->style_name, ")" );
+                        break;
+                }
+
+
+                glyph = face->glyph;
+                size  = face->size;
+
+
+                fontw.set_glyph_count( face->num_glyphs );
+                // fontw.max_ascent  = size->metrics.y_ppem;
+                // fontw.max_ascent  = FT_PIXELS(face->ascender);
+                // fontw.max_descent = -FT_PIXELS(face->descender);
+                fontw.max_ascent  = FT_PIXELS( (int) (face->ascender * (float) psize / 30.0f) );
+                fontw.max_descent = -FT_PIXELS( (int) (face->descender * (float) psize / 30.0f) );
+
+
+                /* Clear bitmap */
+                memset( img->buffer, 0, img->rows * img->pitch );
+
+
+                step_y = size->metrics.y_ppem + gap;
+
+
+                start_x = gap;
+                x = start_x;
+                y = step_y;
+
+
+                for (unsigned int i = 0; i < codes.size(); i++)
+                {
+                    wchar_t current_charcode = codes[i];
+
+                    int glyph_index = FT_Get_Char_Index( face, current_charcode );
+                    if( glyph_index == 0 )
+                    {
+                        WARN( "character code ", int_to_hex( current_charcode ), " is undefined" );
+                        continue;
+                    }
+
+                    error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
+                    if( ! error )
+                    {
+                        unsigned int nextX = x + FT_PIXELS(glyph->metrics.horiAdvance) + gap;
+
+                        if( nextX > img->width )
+                        {
+                            x  = start_x;
+                            y += step_y;
+
+                            if( (unsigned int) y >= img->rows )
+                            {
+                                WARN( "texture too small for ", psize, "pt \"", file, "\"" );
+                                break;
+                            }
+
+                            nextX = x + FT_PIXELS(glyph->metrics.horiAdvance) + gap;
+                        }
+
+                        render_glyph( img, glyph, x, y, ! asBitmap );
+
+                        TexGlyphInfo& tgi = fontw.tgi[ count ];
+                        count++;
+
+                        tgi.c       = current_charcode;
+                        tgi.width   = FT_PIXELS(glyph->metrics.width);
+                        tgi.height  = FT_PIXELS(glyph->metrics.height);
+                        tgi.xoffset = FT_PIXELS(glyph->metrics.horiBearingX);
+                        tgi.yoffset = FT_PIXELS(glyph->metrics.horiBearingY) - tgi.height;
+                        tgi.advance = FT_PIXELS(glyph->metrics.horiAdvance);
+                        tgi.x       = x + tgi.xoffset;
+                        tgi.y       = fontw.tex_height - y + tgi.yoffset;
 
 #ifdef _DEBUG
-            printf( "char: \"%c\"  code: %04x  size=%dx%d\n", tgi.c, tgi.c, tgi.width, tgi.height );
+                        printf( "char: \"%c\"  code: %04x  size=%dx%d\n", tgi.c, tgi.c, tgi.width, tgi.height );
 #endif
 
-            x = nextX;
-        }
-        else
-        {
-            fail++;
-        }
-    }
+                        x = nextX;
+                    }
+                    else
+                    {
+                        WARN( "unable to load glyph for ", int_to_hex( current_charcode ) );
+                        fail++;
+                    }
+                } // for
 
-    if( fail )
-        printf( "Failed to load %d glyphs.\n", fail );
+                if( ! count )
+                {
+                    FATAL( "there is no glyphs in this font" );        
+                }
+                else if( fail )
+                {
+                    ERR( "failed to load ", fail, " glyphs" );
+                }
+            } // init_ft_pixel_sizes
 
+            DEBUG( "destroying font face" );
+            FT_Done_Face( face );
+        } // init_ft_face
 
-    FT_Done_Face( face );
-    FT_Done_FreeType( library );
+        DEBUG( "destroying font library" );
+        FT_Done_FreeType( library );
+    } // init_ft_lib
 
     return count;
 }

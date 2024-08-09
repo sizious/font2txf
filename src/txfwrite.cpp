@@ -84,16 +84,22 @@ void TexFontWriter::display_info()
             break;
     }
 
-    if( g_verbose )
+    switch( g_log_level )
     {
-        std::cout << "TexFont [\n";
-        std::cout << "  format:      " << _format << "\n";
-        std::cout << "  tex_width:   " << tex_width << "\n";
-        std::cout << "  tex_height:  " << tex_height << "\n";
-        std::cout << "  max_ascent:  " << max_ascent << "\n";
-        std::cout << "  max_descent: " << max_descent << "\n";
-        std::cout << "  num_glyphs:  " << num_glyphs << "\n";
-        std::cout << "]" << std::endl;
+        case LogLevel::Verbose:
+            std::cout << "TexFont [\n";
+            std::cout << "  format:      " << _format << "\n";
+            std::cout << "  tex_width:   " << tex_width << "\n";
+            std::cout << "  tex_height:  " << tex_height << "\n";
+            std::cout << "  max_ascent:  " << max_ascent << "\n";
+            std::cout << "  max_descent: " << max_descent << "\n";
+            std::cout << "  num_glyphs:  " << num_glyphs << "\n";
+            std::cout << "]" << std::endl;
+            break;
+
+        case LogLevel::Standard:
+            LOG( "writing ", num_glyphs, " glyphs in txf (width=", tex_width, ", height=", tex_height, ")" );
+            break;
     }
 }
 

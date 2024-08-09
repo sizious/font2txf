@@ -35,8 +35,8 @@ extern char g_default_char_codes[];
 /* Characters to include in the TXF */
 extern std::vector<wchar_t> g_char_codes;
 
-/* Verbose switch */
-extern bool g_verbose;
+/* Log level switch, basically: 0 = quiet, 1 = normal, 2 = verbose */
+extern LogLevel g_log_level;
 
 /* TXF data */
 extern FT_Bitmap g_txf;
@@ -44,24 +44,31 @@ extern FT_Bitmap g_txf;
 /* Console */
 extern Console g_console;
 
+/* Initialize some global variables and stuff. */
+bool initialize( int argc, char* argv[] );
+
 /* Log functions (binded to Console) */
 
 /* Message: Log level (only if verbose) */
-#define LOG( ... ) if ( g_verbose ) { g_console.log( __VA_ARGS__ ); }
+#define LOG( ... ) \
+    if ( g_log_level != LogLevel::Quiet ) { \
+        g_console.log( __VA_ARGS__ ); \
+    }
 
 /* Message: Warning Level */
-#define WARN( ... ) g_console.warn ( __VA_ARGS__ );
+#define WARN( ... ) \
+    g_console.warn ( __VA_ARGS__ );
 
 /* Message: Error level */
-#define ERR( ... ) g_console.error( __VA_ARGS__ );
+#define ERR( ... ) \
+    g_console.error( __VA_ARGS__ );
 
 /* Message: Fatal level */
-#define FATAL( ... ) g_console.fatal( __VA_ARGS__ );
+#define FATAL( ... ) \
+    g_console.fatal( __VA_ARGS__ );
 
-/* Message: Debug level (only if _DEBUG is enabled)*/
-#define DEBUG( ... ) g_console.debug( __VA_ARGS__ );
-
-/* Initialize some global variables and stuff. */
-bool initialize( int argc, char* argv[] );
+/* Message: Debug level (only if _DEBUG is enabled) */
+#define DEBUG( ... ) \
+    g_console.debug( __VA_ARGS__ );
 
 #endif /* __GLOBAL_H__ */
