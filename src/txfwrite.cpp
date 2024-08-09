@@ -100,6 +100,10 @@ void TexFontWriter::display_info()
         case LogLevel::Standard:
             LOG( "writing ", num_glyphs, " glyphs in txf (width=", tex_width, ", height=", tex_height, ")" );
             break;
+
+        case LogLevel::Quiet:
+        default:
+            break;
     }
 }
 

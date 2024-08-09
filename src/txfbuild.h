@@ -4,7 +4,9 @@
 #include "global.h"
 #include "txfwrite.h"
 
-/* Build the TXF. Returns number of glyphs added or zero if fails. */
+/* Build the TXF (textured font).
+ * Returns number of glyphs added or zero if fails.
+ * If glyphs < 0, it means conversion happened with errors/warnings. */
 int build_txf(TexFontWriter& fontw,
          const char* file,
          const std::vector<wchar_t>& codes,

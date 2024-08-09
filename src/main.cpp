@@ -72,19 +72,23 @@ void usage()
 int main( int argc, char* argv[] )
 {
     TexFontWriter fontw;
-    int i;
-    int gap = DEFAULT_FONT_GAP;
-    int size = DEFAULT_FONT_SIZE;
-    bool asBitmap = false;
-	bool codes_from_cmd = false;
-    bool h_switch = false, q_switch = false, v_switch = false;
+    int i,
+        gap = DEFAULT_FONT_GAP,
+        size = DEFAULT_FONT_SIZE,
+        txf_encoded_glyphs = 0;
+    bool asBitmap = false,
+        txf_encoded_without_issues = false,
+        c_switch = false,
+        h_switch = false,
+        q_switch = false,
+        v_switch = false;
     char* infile = 0;
     char outfile[ FILENAME_MAX ];
     std::string codesfile;
     char* codes = g_default_char_codes;
 #ifdef DISPLAY
     bool preview_txf = false;
-#endif    
+#endif
 
     if( !initialize( argc, argv ) )
     {
@@ -140,7 +144,7 @@ int main( int argc, char* argv[] )
                 if( i >= argc )
                     break;
                 codes = argv[ i ];
-                codes_from_cmd = true;
+                c_switch = true;
                 DEBUG( "setting up codes: \"", codes, "\"" );
             }
 #if 0
@@ -234,7 +238,7 @@ int main( int argc, char* argv[] )
     }
 	
     /* Options "-c" and "-f" can't be mixed */
-    if( codes_from_cmd && ! codesfile.empty() )
+    if( c_switch && ! codesfile.empty() )
 	{
 		ERR( "unable to use `-c` and `-f` options at the same time" );
         return EXIT_FAILURE;
@@ -296,8 +300,11 @@ int main( int argc, char* argv[] )
         }
     }
 
-    fontw.num_glyphs = build_txf( fontw, infile, g_char_codes, &g_txf, size, gap,
-                                  asBitmap );
+    txf_encoded_glyphs = build_txf( fontw, infile, g_char_codes, &g_txf, size, gap,
+                                    asBitmap );
+    txf_encoded_without_issues = ( txf_encoded_glyphs > 0 );
+    
+    fontw.num_glyphs = abs( txf_encoded_glyphs );
 
     if( ! fontw.num_glyphs )
 	{
@@ -310,21 +317,27 @@ int main( int argc, char* argv[] )
     fontw.tex_image = g_txf.buffer;
     fontw.write( outfile );
 
-#ifdef _DEBUG
-#ifdef _DEBUG_FONT_DUMP_TO_CONSOLE
+#if _DEBUG && _DEBUG_FONT_DUMP_TO_CONSOLE
     fontw.dump_to_console();
-#endif // _DEBUG_FONT_DUMP_TO_CONSOLE
-#endif // _DEBUG
+#endif
+
+    if( txf_encoded_without_issues )
+    {
+        LOG( "txf written successfully" );
+    }
+    else
+    {
+        WARN( "txf written with issues" );
+    }
 
 #ifdef DISPLAY
     if ( preview_txf )
     {
-        LOG( "displaying preview... close the preview window to exit" );
+        LOG( "displaying txf preview... close the preview window to exit" );
         do_preview_txf( argc, argv );
     }
 #endif
 
-    LOG( "txf file written successfully" );
     return EXIT_SUCCESS;
 }
 

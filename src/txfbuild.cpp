@@ -92,7 +92,9 @@ static FT_Error render_glyph( FT_Bitmap* img, FT_GlyphSlot glyph,
 }
 
 
-/* Returns number of glyphs added or zero if fails. */
+/* Build the TXF (textured font).
+ * Returns number of glyphs added or zero if fails.
+ * If glyphs < 0, it means conversion happened with errors/warnings. */
 int build_txf( TexFontWriter& fontw,
                const char* file,
                const std::vector<wchar_t>& codes,
@@ -108,7 +110,10 @@ int build_txf( TexFontWriter& fontw,
     FT_Size size;
     FT_F26Dot6 start_x, step_y, x, y;
     int count = FAILED_BUILD_TXF, fail = 0;
-    bool init_ft_lib = true, init_ft_face = true, init_ft_pixel_sizes = true;
+    bool init_ft_lib = true,
+        init_ft_face = true,
+        init_ft_pixel_sizes = true,
+        is_conversion_completely_successful = false;
 
 
     error = FT_Init_FreeType( &library );
@@ -152,8 +157,13 @@ int build_txf( TexFontWriter& fontw,
                         dump_char_maps( face );
                         printf( "]\n" );
                         break;
+
                     case LogLevel::Standard:
-                        LOG( "loading font \"", face->family_name, "\" (", face->style_name, ")" );
+                        LOG( "loading font: ", face->family_name, " (", face->style_name, ")" );
+                        break;
+
+                    case LogLevel::Quiet:
+                    default:
                         break;
                 }
 
@@ -181,6 +191,8 @@ int build_txf( TexFontWriter& fontw,
                 x = start_x;
                 y = step_y;
 
+                LOG( "starting txf generation" );
+                is_conversion_completely_successful = true;
 
                 for (unsigned int i = 0; i < codes.size(); i++)
                 {
@@ -190,6 +202,7 @@ int build_txf( TexFontWriter& fontw,
                     if( glyph_index == 0 )
                     {
                         WARN( "character code ", int_to_hex( current_charcode ), " is undefined" );
+                        is_conversion_completely_successful = false;
                         continue;
                     }
 
@@ -206,6 +219,7 @@ int build_txf( TexFontWriter& fontw,
                             if( (unsigned int) y >= img->rows )
                             {
                                 WARN( "texture too small for ", psize, "pt \"", file, "\"" );
+                                is_conversion_completely_successful = false;
                                 break;
                             }
 
@@ -234,17 +248,19 @@ int build_txf( TexFontWriter& fontw,
                     }
                     else
                     {
-                        WARN( "unable to load glyph for ", int_to_hex( current_charcode ) );
+                        WARN( "unable to load glyph for ", int_to_hex( current_charcode ) );                        
                         fail++;
                     }
                 } // for
 
                 if( ! count )
                 {
-                    FATAL( "there is no glyphs in this font" );        
+                    is_conversion_completely_successful = false;
+                    FATAL( "there is no glyphs in this font" );                    
                 }
                 else if( fail )
                 {
+                    is_conversion_completely_successful = false;
                     ERR( "failed to load ", fail, " glyphs" );
                 }
             } // init_ft_pixel_sizes
@@ -256,6 +272,12 @@ int build_txf( TexFontWriter& fontw,
         DEBUG( "destroying font library" );
         FT_Done_FreeType( library );
     } // init_ft_lib
+
+    if( ! is_conversion_completely_successful )
+    {
+        // reverse the sign to notify the caller that we indeed converted but errors/warnings happened...
+        count = count * -1;
+    }
 
     return count;
 }
