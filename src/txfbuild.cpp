@@ -159,7 +159,7 @@ int build_txf( TexFontWriter& fontw,
                         break;
 
                     case LogLevel::Standard:
-                        LOG( "loading font: ", face->family_name, " (", face->style_name, ")" );
+                        LOG( "using font: ", face->family_name, " (", face->style_name, ")" );
                         break;
 
                     case LogLevel::Quiet:
@@ -167,10 +167,11 @@ int build_txf( TexFontWriter& fontw,
                         break;
                 }
 
+                LOG( "starting txf generation" );
+                is_conversion_completely_successful = true;
 
                 glyph = face->glyph;
                 size  = face->size;
-
 
                 fontw.set_glyph_count( face->num_glyphs );
                 // fontw.max_ascent  = size->metrics.y_ppem;
@@ -179,20 +180,13 @@ int build_txf( TexFontWriter& fontw,
                 fontw.max_ascent  = FT_PIXELS( (int) (face->ascender * (float) psize / 30.0f) );
                 fontw.max_descent = -FT_PIXELS( (int) (face->descender * (float) psize / 30.0f) );
 
-
                 /* Clear bitmap */
                 memset( img->buffer, 0, img->rows * img->pitch );
 
-
                 step_y = size->metrics.y_ppem + gap;
-
-
                 start_x = gap;
                 x = start_x;
                 y = step_y;
-
-                LOG( "starting txf generation" );
-                is_conversion_completely_successful = true;
 
                 for (unsigned int i = 0; i < codes.size(); i++)
                 {
@@ -261,7 +255,7 @@ int build_txf( TexFontWriter& fontw,
                 else if( fail )
                 {
                     is_conversion_completely_successful = false;
-                    ERR( "failed to load ", fail, " glyphs" );
+                    WARN( "failed to load ", fail, " glyphs" );
                 }
             } // init_ft_pixel_sizes
 
