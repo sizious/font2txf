@@ -29,6 +29,9 @@ ifeq ($(shell echo $(HOST) | cut -c-5),MINGW)
   else
 # Only original and legacy MinGW/MSYS environment
     MINGW := 1
+    ifeq ($(shell echo $(ENVIRONMENT_NAME)),DreamSDK)
+      DREAMSDK := 1
+    endif
   endif
   WINDOWS := 1
 endif
