@@ -42,6 +42,7 @@ CCFLAGS += $(BUILD_FLAG)
 # Static flag
 ifeq ($(STANDALONE_BINARY),1)
   CCFLAGS += -Bstatic -static
+  LDFLAGS += -lpng -lz -lm
 endif
 
 # Enable preview (uses GLUT) flag
