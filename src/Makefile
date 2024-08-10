@@ -18,7 +18,7 @@ STRIP       = $(HOSTSTRIP)
 CCFLAGS     ?= -pipe -W
 
 # Basic linker flags
-LDFLAGS     ?= -L/usr/local/lib
+LDFLAGS     ?= -L/usr/local/lib -L/usr/lib
 LDLIBS      ?= -lfreetype
 
 # Sources and objects (dynamic here)
@@ -46,21 +46,24 @@ endif
 
 # Enable preview (uses GLUT) flag
 ifeq ($(PREVIEW),1)
-  # Static Freeglut
-  LIB_FREEGLUT := -lfreeglut
-  ifeq ($(STANDALONE_BINARY),1)
-    CCFLAGS += -DFREEGLUT_STATIC
-	LIB_FREEGLUT := -lfreeglut_static
-  endif
+  PREVIEW_CCFLAGS = -DDISPLAY
+  PREVIEW_LDLIBS = -lGL -lglut -lGLU
 
-  # Freeglut
-  CCFLAGS += -DDISPLAY
-  LDLIBS += $(LIB_FREEGLUT) -lopengl32 -lglu32
-
-  # Windows specific libraries used by Freeglut
   ifdef WINDOWS
-    LDLIBS += -lgdi32 -lwinmm
+    # Standard Freeglut library (dynamically linked)
+    PREVIEW_LDLIB_FREEGLUT := -lfreeglut
+
+    # Handle static Freeglut
+    ifeq ($(STANDALONE_BINARY),1)
+      PREVIEW_CCFLAGS += -DFREEGLUT_STATIC
+	    PREVIEW_LDLIB_FREEGLUT := -lfreeglut_static
+    endif
+
+    PREVIEW_LDLIBS += $(PREVIEW_LDLIB_FREEGLUT) -lopengl32 -lglu32 -lgdi32 -lwinmm
   endif
+
+  CCFLAGS += $(PREVIEW_CCFLAGS)
+  LDLIBS += $(PREVIEW_LDLIBS)
 endif
 
 ifdef MACOS
