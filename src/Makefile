@@ -39,12 +39,6 @@ ifeq ($(DEBUG),1)
 endif
 CCFLAGS += $(BUILD_FLAG)
 
-# Static flag
-ifeq ($(STANDALONE_BINARY),1)
-  CCFLAGS += -Bstatic -static
-  LDFLAGS += -lpng -lz -lm
-endif
-
 # Enable preview (uses GLUT) flag
 ifeq ($(PREVIEW),1)
   PREVIEW_CCFLAGS = -DDISPLAY
@@ -72,6 +66,12 @@ endif
 
 ifdef MACOS
   CCFLAGS += -std=gnu++11
+endif
+
+# Static flag
+ifeq ($(STANDALONE_BINARY),1)
+  CCFLAGS += -Bstatic -static
+  LDLIBS += -lpng -lz -lm
 endif
 
 # Final flags
