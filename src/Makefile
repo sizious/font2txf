@@ -49,14 +49,17 @@ ifeq ($(PREVIEW),1)
   PREVIEW_CCFLAGS = -DDISPLAY
   PREVIEW_LDLIBS = -lGL -lglut -lGLU
 
+  ifeq ($(STANDALONE_BINARY),1)
+    PREVIEW_CCFLAGS += -DFREEGLUT_STATIC
+  endif
+
   ifdef WINDOWS
     # Standard Freeglut library (dynamically linked)
     PREVIEW_LDLIB_FREEGLUT := -lfreeglut
 
     # Handle static Freeglut
     ifeq ($(STANDALONE_BINARY),1)
-      PREVIEW_CCFLAGS += -DFREEGLUT_STATIC
-	    PREVIEW_LDLIB_FREEGLUT := -lfreeglut_static
+      PREVIEW_LDLIB_FREEGLUT := -lfreeglut_static
     endif
 
     PREVIEW_LDLIBS = $(PREVIEW_LDLIB_FREEGLUT) -lopengl32 -lglu32 -lgdi32 -lwinmm
