@@ -146,6 +146,7 @@ Of couse, you can't mix `-v` and `-q` options at the same time.
 ## Useful links
 
 * [A Simple OpenGL-based API for Texture Mapped Text](http://sgifiles.irixnet.org/sgi/opengl/contrib/mjk/tips/TexFont/TexFont.html)
+  (the original Mark J. Kilgard article while he was working at SGI)
 * [Building .txf font texture files for the Celestia project](https://en.wikibooks.org/wiki/Celestia/Internationalization#Building_.txf_font_texture_files)
 * [Online Celestia Font Texture Generator](http://web.archive.org/web/20080413101857/http://celestia.teyssier.org/ttf2txf/index.html)
   (not working anymore but some useful info is displayed)
