@@ -59,7 +59,7 @@ ifeq ($(PREVIEW),1)
 	    PREVIEW_LDLIB_FREEGLUT := -lfreeglut_static
     endif
 
-    PREVIEW_LDLIBS += $(PREVIEW_LDLIB_FREEGLUT) -lopengl32 -lglu32 -lgdi32 -lwinmm
+    PREVIEW_LDLIBS = $(PREVIEW_LDLIB_FREEGLUT) -lopengl32 -lglu32 -lgdi32 -lwinmm
   endif
 
   CCFLAGS += $(PREVIEW_CCFLAGS)
