@@ -68,7 +68,7 @@ ifdef MACOS
 endif
 
 # Final flags
-INC_FLAGS   := -I/usr/local/include/freetype2 -I/usr/local/include
+INC_FLAGS   := -I/usr/local/include/freetype2 -I/usr/local/include -I/usr/include/freetype2 -I/usr/include
 CXXFLAGS    := $(CCFLAGS) -DPROGRAM_VERSION=\"$(VERSION)\" $(INC_FLAGS)
 
 # Makefile targets
